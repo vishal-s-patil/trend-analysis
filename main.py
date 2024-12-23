@@ -50,5 +50,5 @@ if __name__ == "__main__":
 
     img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
     title_image_pairs = [('Title', img)]
-    send_email_with_titles_and_images(title_image_pairs)
+    send_email_with_titles_and_images(title_image_pairs, mail_config)
     # send_email_with_titles_and_images(title_image_pairs, mail_config)
