@@ -40,5 +40,6 @@ if __name__ == "__main__":
 
     columns = ["date", "count"]
 
-    read(vertica_connection, query, columns)
+    df = read(vertica_connection, query, columns)
+    print(df)
     # send_email_with_titles_and_images(title_image_pairs, mail_config)
