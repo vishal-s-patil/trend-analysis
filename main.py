@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 from vertica import create_connection, read
 from generate_graph import create_combined_graph
-from mail import send_email_with_titles_and_images
+from .mail import send_email_with_titles_and_images
 load_dotenv()
 
 # mail config 
