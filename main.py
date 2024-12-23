@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 from vertica import create_connection, read
+from generate_graph import create_combined_graph
 #from mail import send_email_with_titles_and_images
 load_dotenv()
 
@@ -42,4 +43,10 @@ if __name__ == "__main__":
 
     df = read(vertica_connection, query, columns)
     print(df)
+
+    title = "All selects day wise trend for 4 weeks"
+    x_axis = "day"
+    y_axis = "total_selects"
+
+    create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
     # send_email_with_titles_and_images(title_image_pairs, mail_config)
