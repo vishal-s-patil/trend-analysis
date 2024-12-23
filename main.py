@@ -16,7 +16,7 @@ mail_config = {
 vertica_config = {
     "host": "vertica-cluster-url-02-prod-us.netcorein.com",
     "user": "devops",
-    "password": "v?9SaX~cWc8-L~#",
+    "password": "v?9\SaX~cWc8-L~#",
     "database": "smartech",
     "port": 5433,
     "autoCommit": False
