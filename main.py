@@ -31,23 +31,26 @@ if __name__ == "__main__":
 
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
 
-    query = """select
-        date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-        count(1)
-        from netstats.trend_analysis 
-        where date_trunc_day >= '2024-11-30' 
-        group by date_trunc_day 
-        order by date_trunc_day;"""
+    opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
+    title_image_pairs = []
+    for opperation in opperations:
+        query = f"""select
+            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+            count(1)
+            from netstats.trend_analysis 
+            where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}'
+            group by date_trunc_day 
+            order by date_trunc_day;"""
 
-    columns = ["date", "count"]
+        columns = ["date", "count"]
 
-    df = read(vertica_connection, query, columns)
-    print(df)
+        df = read(vertica_connection, query, columns)
+        # print(df)
 
-    title = "All selects day wise trend for 4 weeks"
-    x_axis = "day"
-    y_axis = "total_selects"
+        title = f"All {opperation} day wise trend for 4 weeks"
+        x_axis = "day"
+        y_axis = "total_selects"
 
-    img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
-    title_image_pairs = [('Title', img)]
+        img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
+        title_image_pairs.append((title, img))
     send_email_with_titles_and_images(title_image_pairs, mail_config)
