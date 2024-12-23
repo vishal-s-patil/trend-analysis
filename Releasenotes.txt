@@ -1,0 +1,4 @@
+tag:v1.0.0
+Date: 24-12-23
+Features:
+1. Queries the summary table (netstats.trend_analysis) and sends an email containing a graph that illustrates the daily trends of the count for various types of queries, such as SELECT, INSERT, COPY, UPDATE, DELETE, and MERGE.
