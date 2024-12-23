@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
         title = f"All {opperation} day wise trend for 4 weeks"
         x_axis = "day"
-        y_axis = "total_selects"
+        y_axis = f"total {opperation}s"
 
         img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
         title_image_pairs.append((title, img))
