@@ -5,13 +5,6 @@ from email.mime.image import MIMEImage
 from generate_graph import generate_image
 
 def send_email_with_titles_and_images(title_image_pairs, mail_config):
-    """
-    Function to send an email with multiple title-image combinations.
-    
-    Args:
-    title_image_pairs (list of tuples): List where each tuple contains a title and an image path.
-    """
-
     msg = MIMEMultipart()
     msg['From'] = mail_config["sender_email"]
     msg['To'] = mail_config["receiver_email"]
@@ -41,18 +34,19 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config):
     except Exception as e:
         print(f"Failed to send email: {e}")
 
+if __name__ == "__main__":
+    pass
+    # x1 = ['Jan', 'Feb', 'Mar']
+    # y1 = [[10, 20, 30], [15, 25, 35]]
+    # img1 = generate_image(x1, y1)
 
-x1 = ['Jan', 'Feb', 'Mar']
-y1 = [[10, 20, 30], [15, 25, 35]]
-img1 = generate_image(x1, y1)
+    # x2 = ['Mar', 'Apr', 'May']
+    # y2 = [[15, 25, 35], [10, 20, 30]]
+    # img2 = generate_image(x2, y2)
 
-x2 = ['Mar', 'Apr', 'May']
-y2 = [[15, 25, 35], [10, 20, 30]]
-img2 = generate_image(x2, y2)
+    # title_image_pairs = [
+    #     ("image1", img1),
+    #     ("image2", img2)
+    # ]
 
-title_image_pairs = [
-    ("image1", img1),
-    ("image2", img2)
-]
-
-send_email_with_titles_and_images(title_image_pairs)
+    # send_email_with_titles_and_images(title_image_pairs)
