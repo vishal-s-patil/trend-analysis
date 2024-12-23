@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 from vertica import create_connection, read
 from generate_graph import create_combined_graph
-#from mail import send_email_with_titles_and_images
+from mail import send_email_with_titles_and_images
 load_dotenv()
 
 # mail config 
@@ -49,5 +49,6 @@ if __name__ == "__main__":
     y_axis = "total_selects"
 
     img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
-    title_image_list = [('Title', img)]
+    title_image_pairs = [('Title', img)]
+    send_email_with_titles_and_images(title_image_pairs)
     # send_email_with_titles_and_images(title_image_pairs, mail_config)
