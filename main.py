@@ -48,5 +48,6 @@ if __name__ == "__main__":
     x_axis = "day"
     y_axis = "total_selects"
 
-    create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
+    img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
+    title_image_list = [('Title', img)]
     # send_email_with_titles_and_images(title_image_pairs, mail_config)

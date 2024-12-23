@@ -34,15 +34,19 @@ def create_combined_graph(x, y, z, title, x_axis, y_axis, file_name="combined_gr
     
     plt.legend()
     
-    plt.savefig(file_name)
+    img_buffer = BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)  # Reset the buffer position to the beginning
     
     plt.clf()
+    
+    return img_buffer.getvalue()
 
 if __name__ == '__main__':
     title = "All selects day wise trend for 4 weeks"
     x_axis = "day"
     y_axis = "total_selects"
-    
+
     x = [1, 2, 3, 4, 5]
     y = [10, 20, 30, 20, 5]
     z = [3, 7, 4, 8, 3]
