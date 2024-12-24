@@ -16,7 +16,6 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
     for (heading, title_image_pairs) in lst_title_image_pairs:
         body += f"<h2>{heading}</h2>"
         for idx, (title, img) in enumerate(title_image_pairs, start=1):
-            print(idx, title)
             if (idx - 1) % items_per_row == 0:
                 body += "<tr>"
             
@@ -36,10 +35,10 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
         if len(title_image_pairs) % items_per_row != 0:
             body += "</tr>"
         
-        body += "</table>"
-        body += "</body></html>"
+    body += "</table>"
+    body += "</body></html>"
 
-        msg.attach(MIMEText(body, 'html'))
+    msg.attach(MIMEText(body, 'html'))
 
     try:
         with smtplib.SMTP(mail_config["smtp_server"], mail_config["smtp_port"]) as server:
