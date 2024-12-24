@@ -52,6 +52,7 @@ if __name__ == "__main__":
             order by date_trunc_day;"""
             result = read(vertica_connection, query_with_user, ["date", "count"])
             user_count_map[user] = result['count'].to_list()
+            print(user, len(user_count_map[user]))
         
         columns = ["date", "count"]
 
