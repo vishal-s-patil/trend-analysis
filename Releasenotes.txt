@@ -1,3 +1,8 @@
+tag:v1.1.0
+Date:24-12-24
+Features:
+1. Now performance graphs also be sent
+
 tag:v1.0.0
 Date: 24-12-23
 Features:
