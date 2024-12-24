@@ -48,7 +48,7 @@ def plot_count_graph(vertica_connection, opperations, users):
 
         df = read(vertica_connection, query, columns)
 
-        title = f"All {opperation} day wise count trend for 4 weeks"
+        title = f"{opperation}"
         x_axis = "day"
         y_axis = f"count"
 
@@ -95,7 +95,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
 
         df = read(vertica_connection, query, columns)
 
-        title = f"All {opperation} day wise performance trend for 4 weeks"
+        title = f"{opperation}"
         x_axis = "day"
         y_axis = f"avg_duration_ms"
 
@@ -122,7 +122,9 @@ if __name__ == "__main__":
     title_image_pairs_count = plot_count_graph(vertica_connection, opperations, users)
     title_image_pairs_performance = plot_exec_time_graph(vertica_connection, opperations, users)
 
-    title_image_pairs = title_image_pairs_count + title_image_pairs_performance
+    title_image_pairs = []
+    title_image_pairs.append(("Query Counts 4 Weeks Trend", title_image_pairs_count))
+    title_image_pairs.append(("Query Execution Time 4 Weeks Trend", title_image_pairs_performance))
     items_per_row = 3
     mail_title = "Query count and performance of last 4 weeks"
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
