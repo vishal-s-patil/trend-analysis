@@ -7,7 +7,7 @@ from generate_graph import generate_image
 def send_email_with_titles_and_images(title_image_pairs, mail_config):
     msg = MIMEMultipart()
     msg['From'] = mail_config["sender_email"]
-    msg['To'] = "vspatil8123@gmail.com, vishalspolicepatil55@gmail.com" # ", ".join(mail_config["receiver_emails"])
+    msg['To'] = ", ".join(mail_config["receiver_emails"]) # ", ".join(mail_config["receiver_emails"])
     msg['Subject'] = 'Subject of the email'
 
     body = "<html><body>"
