@@ -119,8 +119,6 @@ if __name__ == "__main__":
     opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
     users = ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'] # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
-    # plot_exec_time_graph(vertica_connection, opperations, users)
-
     title_image_pairs_count = plot_count_graph(vertica_connection, opperations, users)
     title_image_pairs_performance = plot_exec_time_graph(vertica_connection, opperations, users)
 

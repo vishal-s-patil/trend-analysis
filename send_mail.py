@@ -49,17 +49,3 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_
 
 if __name__ == "__main__":
     pass
-    # x1 = ['Jan', 'Feb', 'Mar']
-    # y1 = [[10, 20, 30], [15, 25, 35]]
-    # img1 = generate_image(x1, y1)
-
-    # x2 = ['Mar', 'Apr', 'May']
-    # y2 = [[15, 25, 35], [10, 20, 30]]
-    # img2 = generate_image(x2, y2)
-
-    # title_image_pairs = [
-    #     ("image1", img1),
-    #     ("image2", img2)
-    # ]
-
-    # send_email_with_titles_and_images(title_image_pairs)
