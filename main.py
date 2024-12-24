@@ -68,7 +68,7 @@ if __name__ == "__main__":
         x_axis = "day"
         y_axis = f"total {opperation}s"
 
-        x = map(lambda s: s.split(" ")[0].split("-")[2], df["date"].to_list())
+        x = list(map(lambda s: s.split(" ")[0].split("-")[2], df["date"].to_list()))
         img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
 
