@@ -20,7 +20,7 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
                 body += "<tr>"
             
             body += f"<td style='width:{100 // items_per_row}%; padding:10px; text-align:center;'>"
-            body += f"<h2>{heading}</h2>"
+            body += f"<h2>{title}</h2>"
             
             img = MIMEImage(img, _subtype='png')
             img.add_header('Content-ID', f'<image{idx}>')

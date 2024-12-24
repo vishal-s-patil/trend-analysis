@@ -58,8 +58,6 @@ def plot_count_graph(vertica_connection, opperations, users):
         title_image_pairs.append((title, img))
     
     return title_image_pairs
-    
-    
 
 def plot_exec_time_graph(vertica_connection, opperations, users):
     user_count_map = {}
