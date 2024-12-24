@@ -16,7 +16,7 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_
     body += "<table style='width:100%;'>"
     
     for idx, (title, img) in enumerate(title_image_pairs, start=1):
-        if idx % items_per_row == 1:  # Start a new row for each pair of images
+        if idx % items_per_row == 0:  # Start a new row for each pair of images
             body += "<tr>"
         
         body += f"<td style='width:50%; padding:10px; text-align:center;'>"
