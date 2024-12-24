@@ -6,7 +6,6 @@ from send_mail import send_email_with_titles_and_images
 from datetime import datetime, timedelta
 load_dotenv()
 
-# mail config 
 mail_config = {
     "smtp_server": 'smtp.gmail.com',
     "smtp_port": 587,
@@ -95,17 +94,18 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
             group by date_trunc_day 
             order by date_trunc_day;"""
         
-        for user in users:
-            query_with_user = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            avg(avg_duration_ms) as avg_duration_ms
-            from netstats.trend_analysis 
-            where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}' and user_name = '{user}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
-            result = read(vertica_connection, query_with_user, ["date", "count"])
-            for i, cnt in enumerate(result['count'].to_list()):
-                user_count_map[user][i] = cnt
+        if opperation == 'SELECT':
+            for user in users:
+                query_with_user = f"""select
+                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+                avg(avg_duration_ms) as avg_duration_ms
+                from netstats.trend_analysis 
+                where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}' and user_name = '{user}'
+                group by date_trunc_day 
+                order by date_trunc_day;"""
+                result = read(vertica_connection, query_with_user, ["date", "count"])
+                for i, cnt in enumerate(result['count'].to_list()):
+                    user_count_map[user][i] = cnt
 
         
         columns = ["date", "count"]
@@ -118,7 +118,11 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
 
         x = list(map(lambda ts: ts.day, df['date'].to_list()))
         x = list(map(lambda day: str(day), x))
-        img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
+        if opperation == 'SELECT':
+            img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
+        else:
+            user_count_map = {}
+            img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
 
         for user in users:
