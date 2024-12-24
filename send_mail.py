@@ -22,7 +22,7 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config):
         body += f"<td style='width:50%; padding:10px; text-align:center;'>"
         body += f"<h2>{title}</h2>"
         
-        img = MIMEImage(img)
+        img = MIMEImage(img, _subtype='png')
         img.add_header('Content-ID', f'<image{idx}>')
         msg.attach(img)
 
