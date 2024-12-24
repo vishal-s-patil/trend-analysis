@@ -25,7 +25,7 @@ vertica_config = {
 
 def plot_count_graph(vertica_connection, opperations, users):
     user_count_map = {}
-    title_image_pairs = {}
+    title_image_pairs = []
 
     for user in users:
         user_count_map[user] = [0] * 24
@@ -72,7 +72,7 @@ def plot_count_graph(vertica_connection, opperations, users):
 
 def plot_exec_time_graph(vertica_connection, opperations, users):
     user_count_map = {}
-    title_image_pairs = {}
+    title_image_pairs = []
 
     for user in users:
         user_count_map[user] = [0] * 24
