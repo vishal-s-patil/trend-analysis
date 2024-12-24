@@ -10,9 +10,13 @@ mail_config = {
     "smtp_server": 'smtp.gmail.com',
     "smtp_port": 587,
     "sender_email": os.getenv('FROM_EMAIL'),
-    "receiver_emails": os.getenv('RECEIVER_EMAILS', '').split(','),
+    "receiver_emails": os.getenv('TO_EMAILS').split(','),
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
+
+print(", ".join(mail_config["receiver_emails"]))
+exit()
+
 
 vertica_config = {
     "host": "vertica-cluster-url-02-prod-us.netcorein.com",
