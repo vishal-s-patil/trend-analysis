@@ -7,19 +7,17 @@ from generate_graph import generate_image
 def send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, subject):
     msg = MIMEMultipart()
     msg['From'] = mail_config["sender_email"]
-    msg['To'] = ", ".join(mail_config["receiver_emails"]) # ", ".join(mail_config["receiver_emails"])
+    msg['To'] = ", ".join(mail_config["receiver_emails"])
     msg['Subject'] = subject
 
     body = "<html><body>"
-
-    # Use a table to arrange images in two per row
     body += "<table style='width:100%;'>"
     
     for idx, (title, img) in enumerate(title_image_pairs, start=1):
-        if idx % items_per_row == 0:  # Start a new row for each pair of images
+        if (idx - 1) % items_per_row == 0:
             body += "<tr>"
         
-        body += f"<td style='width:50%; padding:10px; text-align:center;'>"
+        body += f"<td style='width:{100 // items_per_row}%; padding:10px; text-align:center;'>"
         body += f"<h2>{title}</h2>"
         
         img = MIMEImage(img, _subtype='png')
@@ -29,21 +27,20 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_
         body += f'<img src="cid:image{idx}" alt="Image {idx}" style="width:300px;height:auto;">'
         body += "</td>"
 
-        if idx % 2 == 0:  # End the row after every pair of images
+        if idx % items_per_row == 0:
             body += "</tr>"
     
-    if len(title_image_pairs) % 2 != 0:  # If there's an odd number of images, close the last row
+    if len(title_image_pairs) % items_per_row != 0:
         body += "</tr>"
     
     body += "</table>"
-
     body += "</body></html>"
 
     msg.attach(MIMEText(body, 'html'))
 
     try:
         with smtplib.SMTP(mail_config["smtp_server"], mail_config["smtp_port"]) as server:
-            server.starttls()  # Secure the connection
+            server.starttls()
             server.login(mail_config["sender_email"], mail_config["password"])
             server.sendmail(mail_config["sender_email"], mail_config["receiver_emails"], msg.as_string())
             print("Email sent successfully!")
