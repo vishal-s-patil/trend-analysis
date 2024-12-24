@@ -55,11 +55,6 @@ if __name__ == "__main__":
             result = read(vertica_connection, query_with_user, ["date", "count"])
             user_count_map[user] = result['count'].to_list()
         
-        print(user_count_map['behaviour'])
-        print()
-        print(user_count_map['campaign_listing'])
-        exit()
-
         columns = ["date", "count"]
 
         df = read(vertica_connection, query, columns)
@@ -69,7 +64,7 @@ if __name__ == "__main__":
         x_axis = "day"
         y_axis = f"total {opperation}s"
 
-        img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), df["count"].to_list(), title, x_axis, y_axis)
+        img = create_combined_graph(df["date"].to_list(), df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
     send_email_with_titles_and_images(title_image_pairs, mail_config)
 

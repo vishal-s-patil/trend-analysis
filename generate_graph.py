@@ -23,11 +23,14 @@ def generate_image(x, y):
     plt.close(fig)
     return image_binary
 
-def create_combined_graph(x, y, z, title, x_axis, y_axis, file_name="combined_graph.png"):
+def create_combined_graph(x, y, user_count_map, title, x_axis, y_axis, file_name="combined_graph.png"):
     plt.bar(x, y, label="Bar Graph (Y)", color='skyblue', alpha=0.7)
     
-    
-    plt.plot(x, z, label="Line Graph (Z)", color='red', marker='o')
+    colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'black', 'yellow', 'cyan', 'magenta', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', '#FF5733', '#33FF57', '#5733FF', 'aqua', 'azure', 'beige', 'chocolate', 'coral', 'gold', 'indigo', 'khaki', 'lavender', 'navy', 'olive', 'teal']
+    idx = 0
+    for user, lst in user_count_map:
+        plt.plot(x, lst, label=user, color=colors[idx], marker='o')
+        idx+=1
     
     plt.title(title)
     plt.xlabel(x_axis)
