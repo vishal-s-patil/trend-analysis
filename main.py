@@ -68,7 +68,7 @@ def plot_count_graph(vertica_connection, opperations, users):
         for user in users:
             user_count_map[user] = [0] * 24
     
-    send_email_with_titles_and_images(title_image_pairs, mail_config)
+    send_email_with_titles_and_images(title_image_pairs, mail_config, "query count of last 4 weeks")
 
 def plot_exec_time_graph(vertica_connection, opperations, users):
     user_count_map = {}
@@ -115,7 +115,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
         for user in users:
             user_count_map[user] = [0] * 24
     
-    send_email_with_titles_and_images(title_image_pairs, mail_config)
+    send_email_with_titles_and_images(title_image_pairs, mail_config, "query performance of last 4 weeks")
 
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
