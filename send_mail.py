@@ -12,21 +12,30 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config):
 
     body = "<html><body>"
 
-    # Create a container to hold the two images in one row
-    body += "<div style='display: flex; justify-content: space-between;'>"
-
+    # Use a table to arrange images in two per row
+    body += "<table style='width:100%;'>"
+    
     for idx, (title, img) in enumerate(title_image_pairs, start=1):
-        body += f"<div style='width: 48%;'>"
+        if idx % 2 == 1:  # Start a new row for each pair of images
+            body += "<tr>"
+        
+        body += f"<td style='width:50%; padding:10px; text-align:center;'>"
         body += f"<h2>{title}</h2>"
-
+        
         img = MIMEImage(img)
         img.add_header('Content-ID', f'<image{idx}>')
         msg.attach(img)
 
-        body += f'<img src="cid:image{idx}" alt="Image {idx}" style="width:100%; height:auto;">'
-        body += "</div>"
+        body += f'<img src="cid:image{idx}" alt="Image {idx}" style="width:300px;height:auto;">'
+        body += "</td>"
 
-    body += "</div>"  # End the row container
+        if idx % 2 == 0:  # End the row after every pair of images
+            body += "</tr>"
+    
+    if len(title_image_pairs) % 2 != 0:  # If there's an odd number of images, close the last row
+        body += "</tr>"
+    
+    body += "</table>"
 
     body += "</body></html>"
 
