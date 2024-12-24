@@ -79,18 +79,18 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
 
     for opperation in opperations:
         query = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            avg(avg_duration_ms) as avg_duration_ms
-            from netstats.trend_analysis 
+            date_trunc('day', query_start::timestamp) as date_trunc_day,
+            avg(query_duration_us)/1000 as avg_duration_ms
+            from netstats.query_profiles 
             where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
         for user in users:
             query_with_user = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            avg(avg_duration_ms) as avg_duration_ms
-            from netstats.trend_analysis 
+            date_trunc('day', query_start::timestamp) as date_trunc_day,
+            avg(query_duration_us)/1000 as avg_duration_ms
+            from netstats.query_profiles 
             where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}' and user_name = '{user}'
             group by date_trunc_day 
             order by date_trunc_day;"""
@@ -124,3 +124,5 @@ if __name__ == "__main__":
     users = ['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
     plot_exec_time_graph(vertica_connection, opperations, users)
+
+    
