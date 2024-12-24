@@ -11,10 +11,10 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
     msg['Subject'] = subject
 
     body = "<html><body>"
-    body += "<table style='width:100%;'>"
     
     for (heading, title_image_pairs) in lst_title_image_pairs:
         body += f"<h2>{heading}</h2>"
+        body += "<table style='width:100%;'>"
         print(len(title_image_pairs))
         for idx, (title, img) in enumerate(title_image_pairs, start=1):
             if (idx - 1) % items_per_row == 0:
@@ -32,11 +32,11 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
 
             if idx % items_per_row == 0:
                 body += "</tr>"
+        body += "</table>"
         
         if len(title_image_pairs) % items_per_row != 0:
             body += "</tr>"
         
-    body += "</table>"
     body += "</body></html>"
 
     msg.attach(MIMEText(body, 'html'))
