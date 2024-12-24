@@ -15,6 +15,7 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
     
     for (heading, title_image_pairs) in lst_title_image_pairs:
         body += f"<h2>{heading}</h2>"
+        print(len(title_image_pairs))
         for idx, (title, img) in enumerate(title_image_pairs, start=1):
             if (idx - 1) % items_per_row == 0:
                 body += "<tr>"
