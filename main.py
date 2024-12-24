@@ -82,7 +82,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
             date_trunc('day', query_start::timestamp) as date_trunc_day,
             avg(query_duration_us)/1000 as avg_duration_ms
             from netstats.query_profiles 
-            where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}'
+            where date_trunc_day >= '2024-11-30' and qyery ilike '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
@@ -91,7 +91,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
             date_trunc('day', query_start::timestamp) as date_trunc_day,
             avg(query_duration_us)/1000 as avg_duration_ms
             from netstats.query_profiles 
-            where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}' and user_name = '{user}'
+            where date_trunc_day >= '2024-11-30' and qyery ilike '{opperation[0]}' and user_name = '{user}'
             group by date_trunc_day 
             order by date_trunc_day;"""
             result = read(vertica_connection, query_with_user, ["date", "count"])
