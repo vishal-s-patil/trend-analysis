@@ -32,11 +32,8 @@ def get_past_date(days_ago):
 
 
 def plot_count_graph(vertica_connection, opperations, users):
-    user_count_map = {}
     title_image_pairs = []
-
-    for user in users:
-        user_count_map[user] = [0] * 24
+    user_count_map = {}
 
     for opperation in opperations:
         query = f"""select
@@ -47,24 +44,11 @@ def plot_count_graph(vertica_connection, opperations, users):
             group by date_trunc_day 
             order by date_trunc_day;"""
         
-        for user in users:
-            query_with_user = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            count(1)
-            from netstats.trend_analysis 
-            where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}' and user_name = '{user}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
-            result = read(vertica_connection, query_with_user, ["date", "count"])
-            for i, cnt in enumerate(result['count'].to_list()):
-                user_count_map[user][i] = cnt
-
-        
         columns = ["date", "count"]
 
         df = read(vertica_connection, query, columns)
 
-        title = f"All {opperation} day wise trend for 4 weeks"
+        title = f"All {opperation} day wise count trend for 4 weeks"
         x_axis = "day"
         y_axis = f"count"
 
@@ -72,11 +56,10 @@ def plot_count_graph(vertica_connection, opperations, users):
         x = list(map(lambda day: str(day), x))
         img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
-
-        for user in users:
-            user_count_map[user] = [0] * 24
     
-    send_email_with_titles_and_images(title_image_pairs, mail_config, "query count of last 4 weeks")
+    return title_image_pairs
+    
+    
 
 def plot_exec_time_graph(vertica_connection, opperations, users):
     user_count_map = {}
@@ -112,7 +95,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
 
         df = read(vertica_connection, query, columns)
 
-        title = f"All {opperation} day wise trend for 4 weeks"
+        title = f"All {opperation} day wise performance trend for 4 weeks"
         x_axis = "day"
         y_axis = f"avg_duration_ms"
 
@@ -128,7 +111,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
         for user in users:
             user_count_map[user] = [0] * 24
     
-    send_email_with_titles_and_images(title_image_pairs, mail_config, "query performance of last 4 weeks")
+    return title_image_pairs
 
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
@@ -136,4 +119,12 @@ if __name__ == "__main__":
     opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
     users = ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'] # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
-    plot_exec_time_graph(vertica_connection, opperations, users)
+    # plot_exec_time_graph(vertica_connection, opperations, users)
+
+    title_image_pairs_count = plot_count_graph(vertica_connection, opperations, users)
+    title_image_pairs_performance = plot_exec_time_graph(vertica_connection, opperations, users)
+
+    title_image_pairs = title_image_pairs_count + title_image_pairs_performance
+    items_per_row = 3
+    mail_title = "Query count and performance of last 4 weeks"
+    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)

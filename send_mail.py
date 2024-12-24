@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from generate_graph import generate_image
 
-def send_email_with_titles_and_images(title_image_pairs, mail_config, subject):
+def send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, subject):
     msg = MIMEMultipart()
     msg['From'] = mail_config["sender_email"]
     msg['To'] = ", ".join(mail_config["receiver_emails"]) # ", ".join(mail_config["receiver_emails"])
@@ -16,7 +16,7 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config, subject):
     body += "<table style='width:100%;'>"
     
     for idx, (title, img) in enumerate(title_image_pairs, start=1):
-        if idx % 2 == 1:  # Start a new row for each pair of images
+        if idx % items_per_row == 1:  # Start a new row for each pair of images
             body += "<tr>"
         
         body += f"<td style='width:50%; padding:10px; text-align:center;'>"
