@@ -58,7 +58,7 @@ def plot_count_graph(vertica_connection, opperations, users):
 
         title = f"All {opperation} day wise trend for 4 weeks"
         x_axis = "day"
-        y_axis = f"total {opperation}s"
+        y_axis = f"count"
 
         x = list(map(lambda ts: ts.day, df['date'].to_list()))
         x = list(map(lambda day: str(day), x))
@@ -105,7 +105,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
 
         title = f"All {opperation} day wise trend for 4 weeks"
         x_axis = "day"
-        y_axis = f"total {opperation}s"
+        y_axis = f"avg_duration_ms"
 
         x = list(map(lambda ts: ts.day, df['date'].to_list()))
         x = list(map(lambda day: str(day), x))
