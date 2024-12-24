@@ -38,7 +38,7 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
         body += "</table>"
         body += "</body></html>"
 
-    msg.attach(MIMEText(body, 'html'))
+        msg.attach(MIMEText(body, 'html'))
 
     try:
         with smtplib.SMTP(mail_config["smtp_server"], mail_config["smtp_port"]) as server:
