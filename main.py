@@ -10,7 +10,7 @@ mail_config = {
     "smtp_server": 'smtp.gmail.com',
     "smtp_port": 587,
     "sender_email": os.getenv('FROM_EMAIL'),
-    "receiver_emails": os.getenv('TO_EMAILS'),
+    "receiver_emails": os.getenv('RECEIVER_EMAILS', '').split(','),
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
 
