@@ -9,8 +9,8 @@ load_dotenv()
 mail_config = {
     "smtp_server": 'smtp.gmail.com',
     "smtp_port": 587,
-    "sender_email": 'vspatil8123@gmail.com',
-    "receiver_email": 'vspatil8123@gmail.com',
+    "sender_email": os.getenv('FROM_EMAIL'),
+    "receiver_email": os.getenv('TO_EMAILS'),
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
 
@@ -23,14 +23,11 @@ vertica_config = {
     "autoCommit": False
 }
 
-# -U devops -d smartech --password='v?9\SaX~cWc8-L~#' -h 
-
-
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
 
     opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
-    users = ['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter', ] 
+    users = ['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
     title_image_pairs = []
     user_count_map = {}
