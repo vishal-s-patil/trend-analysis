@@ -33,6 +33,8 @@ if __name__ == "__main__":
     users = ['behaviour', 'campaign_listing'] # 'contact_summary', 'raman',
     title_image_pairs = []
     user_count_map = {}
+    for user in users:
+        user_count_map[user] = [24*0]
     for opperation in opperations:
         query = f"""select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
@@ -52,6 +54,8 @@ if __name__ == "__main__":
             order by date_trunc_day;"""
             result = read(vertica_connection, query_with_user, ["date", "count"])
             user_count_map[user] = result['count'].to_list()
+            for i, cnt in enumerate(result['count'].to_list()):
+                user_count_map[user][i] = cnt
             print(opperation, user, len(user_count_map[user]))
         
         columns = ["date", "count"]
