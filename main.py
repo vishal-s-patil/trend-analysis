@@ -14,6 +14,8 @@ mail_config = {
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
 
+print(os.getenv('VERTICA_SMARTECH_DEVOPS_PASSWORD'))
+
 vertica_config = {
     "host": "vertica-cluster-url-02-prod-us.netcorein.com",
     "user": "devops",
