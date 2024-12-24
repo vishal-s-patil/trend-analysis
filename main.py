@@ -58,7 +58,10 @@ if __name__ == "__main__":
             result = read(vertica_connection, query_with_user, ["date", "count"])
             for i, cnt in enumerate(result['count'].to_list()):
                 user_count_map[user][i] = cnt
-            
+        
+        print(opperation, user_count_map['behaviour'])
+        print()
+        print(opperation, user_count_map['campaign_listing'])
         
         columns = ["date", "count"]
 
