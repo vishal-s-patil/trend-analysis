@@ -56,7 +56,7 @@ if __name__ == "__main__":
             user_count_map[user] = result
         
         print(user_count_map)
-        return
+        exit()
 
         columns = ["date", "count"]
 
