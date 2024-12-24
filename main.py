@@ -123,5 +123,9 @@ if __name__ == "__main__":
     title_image_pairs.append(("Query Counts 4 Weeks Trend", title_image_pairs_count))
     title_image_pairs.append(("Query Execution Time 4 Weeks Trend", title_image_pairs_performance))
     items_per_row = 3
+
+    for title, pair in title_image_pairs:
+        print(title, type(pair), type(pair[1]))
+    exit()
     mail_title = "Query count and performance of last 4 weeks"
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
