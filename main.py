@@ -35,6 +35,7 @@ if __name__ == "__main__":
     user_count_map = {}
     for user in users:
         user_count_map[user] = [24*0]
+    print(user_count_map)
     for opperation in opperations:
         query = f"""select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
