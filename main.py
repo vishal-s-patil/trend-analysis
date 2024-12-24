@@ -24,7 +24,10 @@ vertica_config = {
 }
 
 def plot_count_graph(vertica_connection, opperations, users):
-        for user in users:
+    user_count_map = {}
+    title_image_pairs = {}
+
+    for user in users:
         user_count_map[user] = [0] * 24
 
     for opperation in opperations:
@@ -68,13 +71,16 @@ def plot_count_graph(vertica_connection, opperations, users):
     send_email_with_titles_and_images(title_image_pairs, mail_config)
 
 def plot_exec_time_graph(vertica_connection, opperations, users):
+    user_count_map = {}
+    title_image_pairs = {}
+
     for user in users:
-    user_count_map[user] = [0] * 24
+        user_count_map[user] = [0] * 24
 
     for opperation in opperations:
         query = f"""select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            count(1)
+            avg(avg_duration_ms) as avg_duration_ms
             from netstats.trend_analysis 
             where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}'
             group by date_trunc_day 
@@ -83,7 +89,7 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
         for user in users:
             query_with_user = f"""select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            count(1)
+            avg(avg_duration_ms) as avg_duration_ms
             from netstats.trend_analysis 
             where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}' and user_name = '{user}'
             group by date_trunc_day 
@@ -117,7 +123,4 @@ if __name__ == "__main__":
     opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
     users = ['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
-    title_image_pairs = []
-    user_count_map = {}
-
-
+    plot_exec_time_graph(vertica_connection, opperations, users)
