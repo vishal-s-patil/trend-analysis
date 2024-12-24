@@ -14,7 +14,7 @@ mail_config = {
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
 
-print((", ".join(mail_config["receiver_emails"])))
+print(type(", ".join(mail_config["receiver_emails"])))
 exit()
 
 vertica_config = {
