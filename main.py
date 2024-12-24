@@ -14,6 +14,9 @@ mail_config = {
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
 
+print((", ".join(mail_config["receiver_emails"])))
+exit()
+
 vertica_config = {
     "host": "vertica-cluster-url-02-prod-us.netcorein.com",
     "user": "devops",
