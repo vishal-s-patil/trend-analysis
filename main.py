@@ -30,7 +30,7 @@ if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
 
     opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
-    users = ['behaviour', 'campaign_listing'] # 'contact_summary', 'raman',
+    users = ['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter', ] 
 
     title_image_pairs = []
     user_count_map = {}
