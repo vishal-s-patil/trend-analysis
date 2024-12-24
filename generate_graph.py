@@ -26,6 +26,7 @@ def generate_image(x, y):
 def create_combined_graph(x, y, z, title, x_axis, y_axis, file_name="combined_graph.png"):
     plt.bar(x, y, label="Bar Graph (Y)", color='skyblue', alpha=0.7)
     
+    
     plt.plot(x, z, label="Line Graph (Z)", color='red', marker='o')
     
     plt.title(title)

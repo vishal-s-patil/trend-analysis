@@ -53,7 +53,7 @@ if __name__ == "__main__":
             group by date_trunc_day 
             order by date_trunc_day;"""
             result = read(vertica_connection, query_with_user, ["date", "count"])
-            user_count_map[user] = result
+            user_count_map[user] = result['count'].to_list()
         
         print(user_count_map['behaviour'])
         print()
