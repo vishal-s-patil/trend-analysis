@@ -3,6 +3,7 @@ import os
 from vertica import create_connection, read
 from generate_graph import create_combined_graph
 from send_mail import send_email_with_titles_and_images
+from datetime import datetime, timedelta
 load_dotenv()
 
 # mail config 
@@ -14,6 +15,8 @@ mail_config = {
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
 
+number_of_days = 24
+
 vertica_config = {
     "host": "vertica-cluster-url-02-prod-us.netcorein.com",
     "user": "devops",
@@ -22,6 +25,12 @@ vertica_config = {
     "port": 5433,
     "autoCommit": False
 }
+
+def get_past_date(days_ago):
+    today = datetime.today()
+    past_date = today - timedelta(days=days_ago)
+    return past_date.strftime('%Y-%m-%d')
+
 
 def plot_count_graph(vertica_connection, opperations, users):
     user_count_map = {}
@@ -35,7 +44,7 @@ def plot_count_graph(vertica_connection, opperations, users):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
-            where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}'
+            where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
@@ -44,7 +53,7 @@ def plot_count_graph(vertica_connection, opperations, users):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
-            where date_trunc_day >= '2024-11-30' and operation = '{opperation[0]}' and user_name = '{user}'
+            where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}' and user_name = '{user}'
             group by date_trunc_day 
             order by date_trunc_day;"""
             result = read(vertica_connection, query_with_user, ["date", "count"])
