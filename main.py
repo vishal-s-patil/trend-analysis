@@ -90,7 +90,6 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
                 for i, cnt in enumerate(result['count'].to_list()):
                     user_count_map[user][i] = cnt
 
-        
         columns = ["date", "count"]
 
         df = read(vertica_connection, query, columns)
@@ -102,6 +101,8 @@ def plot_exec_time_graph(vertica_connection, opperations, users):
         x = list(map(lambda ts: ts.day, df['date'].to_list()))
         x = list(map(lambda day: str(day), x))
         if opperation == 'SELECT':
+            print(user_count_map)
+            exit()
             img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         else:
             user_count_map = {}
