@@ -36,7 +36,7 @@ def send_email_with_titles_and_images(title_image_pairs, mail_config):
         with smtplib.SMTP(mail_config["smtp_server"], mail_config["smtp_port"]) as server:
             server.starttls()  # Secure the connection
             server.login(mail_config["sender_email"], mail_config["password"])
-            server.sendmail(mail_config["sender_email"], mail_config["receiver_email"], msg.as_string())
+            server.sendmail(mail_config["sender_email"], mail_config["receiver_emails"], msg.as_string())
             print("Email sent successfully!")
     except Exception as e:
         print(f"Failed to send email: {e}")
