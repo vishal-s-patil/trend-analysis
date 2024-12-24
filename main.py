@@ -34,7 +34,7 @@ if __name__ == "__main__":
     title_image_pairs = []
     user_count_map = {}
     for user in users:
-        user_count_map[user] = [24*0]
+        user_count_map[user] = [0] * 24
     print(user_count_map)
     for opperation in opperations:
         query = f"""select
