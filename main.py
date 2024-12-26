@@ -74,7 +74,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
     title_image_pairs = []
 
     for user in users:
-        user_count_map[user] = [0] * 31
+        user_count_map[user] = [0] * 40
 
     for opperation in opperations:
         '''
@@ -121,7 +121,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
         title_image_pairs.append((title, img))
 
         for user in users:
-            user_count_map[user] = [0] * 31
+            user_count_map[user] = [0] * 40
     
     return title_image_pairs
 
