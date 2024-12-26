@@ -77,11 +77,14 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
         user_count_map[user] = [0] * 24
 
     for opperation in opperations:
+        '''
+        where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}'
+        '''
         query = f"""select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             avg(avg_duration_ms) as avg_duration_ms
             from netstats.trend_analysis 
-            where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}'
+            where date_trunc_day >= '2024-10-01' and date_trunc_day <= '2024-11-01' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
@@ -91,7 +94,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
                 date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
                 avg(avg_duration_ms) as avg_duration_ms
                 from netstats.trend_analysis 
-                where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}' and user_name = '{user}'
+                where date_trunc_day >= '2024-10-01' and date_trunc_day <= '2024-11-01' and operation = '{opperation[0]}' and user_name = '{user}'
                 group by date_trunc_day 
                 order by date_trunc_day;"""
                 result = read(vertica_connection, query_with_user, ["date", "count"])
