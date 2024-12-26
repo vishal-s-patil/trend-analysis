@@ -49,7 +49,7 @@ def plot_count_graph_day(vertica_connection, opperations, users):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
-            where date_trunc_day >= '2024-10-01' and date_trunc_day <= '2024-11-01' and operation = '{opperation[0]}'
+            where date_trunc_day >= '2024-10-03' and date_trunc_day <= '2024-11-03' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
@@ -84,7 +84,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             avg(avg_duration_ms) as avg_duration_ms
             from netstats.trend_analysis 
-            where date_trunc_day >= '2024-10-01' and date_trunc_day <= '2024-11-01' and operation = '{opperation[0]}'
+            where date_trunc_day >= '2024-10-03' and date_trunc_day <= '2024-11-03' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
@@ -94,7 +94,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
                 date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
                 avg(avg_duration_ms) as avg_duration_ms
                 from netstats.trend_analysis 
-                where date_trunc_day >= '2024-10-01' and date_trunc_day <= '2024-11-01' and operation = '{opperation[0]}' and user_name = '{user}'
+                where date_trunc_day >= '2024-10-03' and date_trunc_day <= '2024-11-03' and operation = '{opperation[0]}' and user_name = '{user}'
                 group by date_trunc_day 
                 order by date_trunc_day;"""
                 
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
 
     opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
-    users = ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'] # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
+    users = ['contact_summary', 'sas', 'campaign_listing', 'campaign_report', 'hansal_summary'] # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
     title_image_pairs_count = plot_count_graph_day(vertica_connection, opperations, users)
     title_image_pairs_performance = plot_exec_time_graph_day(vertica_connection, opperations, users)
