@@ -56,7 +56,6 @@ def plot_count_graph_day(vertica_connection, opperations, users):
         columns = ["date", "count"]
 
         df = read(vertica_connection, query, columns)
-        print(opperation, df)
 
         title = f"{opperation}"
         x_axis = "day"
@@ -64,6 +63,10 @@ def plot_count_graph_day(vertica_connection, opperations, users):
 
         x = list(map(lambda ts: ts.day, df['date'].to_list()))
         x = list(map(lambda day: str(day), x))
+        print(opperation)
+        print(x)
+        print(df["count"].to_list())
+        print()
         img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
     
