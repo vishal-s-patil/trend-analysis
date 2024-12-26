@@ -31,16 +31,25 @@ def get_past_date(days_ago):
     return past_date.strftime('%Y-%m-%d')
 
 
-def plot_count_graph(vertica_connection, opperations, users):
+def plot_count_graph_day(vertica_connection, opperations, users):
     title_image_pairs = []
     user_count_map = {}
 
     for opperation in opperations:
-        query = f"""select
+        """
+        select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
             where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}'
+            group by date_trunc_day 
+            order by date_trunc_day;
+        """
+        query = f"""select
+            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+            count(1)
+            from netstats.trend_analysis 
+            where date_trunc_day >= '24-10-01' and date_trunc_day <= '24-11-01' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
@@ -59,7 +68,7 @@ def plot_count_graph(vertica_connection, opperations, users):
     
     return title_image_pairs
 
-def plot_exec_time_graph(vertica_connection, opperations, users):
+def plot_exec_time_graph_day(vertica_connection, opperations, users):
     user_count_map = {}
     title_image_pairs = []
 
@@ -116,8 +125,8 @@ if __name__ == "__main__":
     opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
     users = ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'] # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
-    title_image_pairs_count = plot_count_graph(vertica_connection, opperations, users)
-    title_image_pairs_performance = plot_exec_time_graph(vertica_connection, opperations, users)
+    title_image_pairs_count = plot_count_graph_day(vertica_connection, opperations, users)
+    title_image_pairs_performance = plot_exec_time_graph_day(vertica_connection, opperations, users)
 
     title_image_pairs = []
     title_image_pairs.append(("Query Counts 4 Weeks Trend", title_image_pairs_count))
