@@ -119,7 +119,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
                     while diff > 0:
                         user_list.pop(-1)
                         diff -= diff
-                print(len(x), len(user_list))
+                    print(len(x), len(user_list))
             img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         else:
             user_count_map = {}
