@@ -49,7 +49,7 @@ def plot_count_graph_day(vertica_connection, opperations, users):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
-            where date_trunc_day >= '24-10-01' and date_trunc_day <= '24-11-01' and operation = '{opperation[0]}'
+            where date_trunc_day >= '2024-10-01' and date_trunc_day <= '2024-11-01' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
