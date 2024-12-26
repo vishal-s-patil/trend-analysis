@@ -118,7 +118,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
                 if len(user_list) > len(x):
                     diff = len(user_list) - len(x)
                     while diff > 0:
-                        user_list.pop(-1)
+                        user_list.pop()
                         diff -= diff
                 print(user, len(x), len(user_list))
             user_count_map = {}
