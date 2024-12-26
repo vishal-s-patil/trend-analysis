@@ -56,6 +56,7 @@ def plot_count_graph_day(vertica_connection, opperations, users):
         columns = ["date", "count"]
 
         df = read(vertica_connection, query, columns)
+        print(df)
 
         title = f"{opperation}"
         x_axis = "day"
