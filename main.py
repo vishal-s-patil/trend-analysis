@@ -246,8 +246,12 @@ def send_week_wise_graphs(vertica_connection):
         print(week_wise_dimensions_count)
         print(week_wise_dimensions_performance)
         print()
-        img_count = create_combined_graph(day_wise_dimensions_count['x'], day_wise_dimensions_count['y'], day_wise_dimensions_count['user_count_map'], title, x_axis, "count")
-        img_performance = create_combined_graph(day_wise_dimensions_performance['x'], day_wise_dimensions_performance['y'], day_wise_dimensions_performance['user_count_map'], title, x_axis, "avg_duration_ms")
+        img_count = create_combined_graph(day_wise_dimensions_count['x'], day_wise_dimensions_count['y'], {}, title, x_axis, "count")
+        if opperation == 'SELECT':
+            img_performance = create_combined_graph(day_wise_dimensions_performance['x'], day_wise_dimensions_performance['y'], day_wise_dimensions_performance['user_count_map'], title, x_axis, "avg_duration_ms")
+        else:
+            img_performance = create_combined_graph(day_wise_dimensions_performance['x'], day_wise_dimensions_performance['y'], {}, title, x_axis, "avg_duration_ms")
+
         title_image_pairs_count.append((title, img_count))
         title_image_pairs_performance.append((title, img_performance))
     
