@@ -156,7 +156,7 @@ if __name__ == "__main__":
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
         'from_datetime': '2024-11-01',
-        'to_datetime': '2024-12-27',
+        'to_datetime': '2024-12-17',
         'days': 10,
     }
 
