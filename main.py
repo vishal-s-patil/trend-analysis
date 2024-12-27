@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
 import os
-from vertica import create_connection, read
-from generate_graph import create_combined_graph
-from send_mail import send_email_with_titles_and_images
-from datetime import datetime, timedelta
+from modules.vertica import create_connection
+from modules.plot_count_graphs import plot_count_graph_day, get_day_wise_dimensions_count
+from modules.plot_performance_graph import plot_exec_time_graph_day, get_day_wise_dimensions_performance
+from modules.send_mail import send_email_with_titles_and_images
+from modules.generate_graph import create_combined_graph
 load_dotenv()
 
 mail_config = {
@@ -22,143 +23,6 @@ vertica_config = {
     "port": 5433,
     "autoCommit": False
 }
-
-
-def get_past_date(days_ago, start_date):
-    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
-    past_date = start_date_obj - timedelta(days=days_ago)
-    return past_date.strftime('%Y-%m-%d')
-
-
-def plot_count_graph_day(args):
-    title_image_pairs = []
-
-    for opperation in args['opperations']:
-        title = f"{opperation}"
-        x_axis = "day"
-        y_axis = f"count"
-
-        dimensions_count = get_day_wise_dimensions_count(opperation, args)
-        
-        img = create_combined_graph(dimensions_count['x'], dimensions_count['y'], dimensions_count['user_count_map'], title, x_axis, y_axis)
-        title_image_pairs.append((title, img))
-    
-    return title_image_pairs
-
-
-def get_day_wise_dimensions_count(opperation, args):
-    user_count_map = {}
-
-    if args['days'] == 0:
-        query = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            count(1)
-            from netstats.trend_analysis 
-            where date_trunc_day > '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
-    else:
-        query = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            count(1)
-            from netstats.trend_analysis 
-            where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
-    
-    columns = ["date", "count"]
-
-    df = read(args['vertica_connection'], query, columns)
-
-    x = list(map(lambda ts: ts.day, df['date'].to_list()))
-    x = list(map(lambda day: str(day), x))
-
-    y = df["count"].to_list()
-
-    return {'x':x, 'y':y, 'user_count_map':user_count_map}
-
-
-def get_day_wise_dimensions_performance(opperation, args):
-    user_count_map = {}
-
-    for user in args['users']:
-        user_count_map[user] = [0] * 100
-
-    if args['days'] == 0:
-        query = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            avg(avg_duration_ms) as avg_duration_ms
-            from netstats.trend_analysis 
-            where date_trunc_day > '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
-    else:
-        query = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            avg(avg_duration_ms) as avg_duration_ms
-            from netstats.trend_analysis 
-            where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
-    if opperation == 'SELECT':
-        for user in args['users']:
-            if args['days'] == 0:
-                query_with_user = f"""select
-                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-                avg(avg_duration_ms) as avg_duration_ms
-                from netstats.trend_analysis 
-                where date_trunc_day > '{args['from_datetime']}' and date_trunc_day <= '{args['from_datetime']}' and operation = '{opperation[0]}' and user_name = '{user}'
-                group by date_trunc_day 
-                order by date_trunc_day;"""
-            else:
-                query_with_user = f"""select
-                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-                avg(avg_duration_ms) as avg_duration_ms
-                from netstats.trend_analysis 
-                where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}' and user_name = '{user}'
-                group by date_trunc_day 
-                order by date_trunc_day;"""
-            
-            result = read(args['vertica_connection'], query_with_user, ["date", "count"])
-            for i, cnt in enumerate(result['count'].to_list()):
-                user_count_map[user][i] = cnt
-
-    columns = ["date", "count"]
-
-    df = read(vertica_connection, query, columns)
-
-    x = list(map(lambda ts: ts.day, df['date'].to_list()))
-    x = list(map(lambda day: str(day), x))
-
-    y = df["count"].to_list()
-
-    return {'x':x, 'y':y, 'user_count_map':user_count_map}
-
-
-def plot_exec_time_graph_day(args):
-    title_image_pairs = []
-
-    for opperation in args['opperations']:
-        title = f"{opperation}"
-        x_axis = "day"
-        y_axis = f"avg_duration_ms"
-
-        dimensions_performance = get_day_wise_dimensions_performance(opperation)
-        
-        if opperation == 'SELECT':
-            for user, user_list in user_count_map.items():
-                if len(user_list) > len(dimensions_performance['x']):
-                    diff = len(user_list) - len(dimensions_performance['x'])
-                    while diff > 0:
-                        user_list.pop()
-                        diff -= 1
-            img = create_combined_graph(dimensions_performance['x'], dimensions_performance['y'], dimensions_performance['user_count_map'], title, x_axis, y_axis)
-        else:
-            user_count_map = {}
-            img = create_combined_graph(dimensions_performance['x'], dimensions_performance['y'], dimensions_performance['user_count_map'], title, x_axis, y_axis)
-        title_image_pairs.append((title, img))
-    
-    return title_image_pairs
 
 
 def send_day_wise_graphs(vertica_connection):
@@ -261,7 +125,7 @@ def send_week_wise_graphs(vertica_connection):
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
 
-def send_month_wise_grapgs(vertica_connection):
+def send_month_wise_graphs(vertica_connection):
     number_of_months = 2
     to_date = '2024-12-17'
 
@@ -344,4 +208,4 @@ if __name__ == "__main__":
 
     # send_day_wise_graphs(vertica_connection)   
     # send_week_wise_graphs(vertica_connection) 
-    send_month_wise_grapgs(vertica_connection)
+    send_month_wise_graphs(vertica_connection)
