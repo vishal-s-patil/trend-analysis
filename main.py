@@ -196,8 +196,8 @@ def send_week_wise_graphs(vertica_connection):
         for i in range(7):
             sum_count +=  day_wise_dimensions_count['y'][week*7 + i]
             sum_performance +=  day_wise_dimensions_performance['y'][week*7 + i]
-        print(sum_count)
-        print(sum_performance)
+        print(sum_count/7)
+        print(sum_performance/7)
 
     # print(dimensions_count, dimensions_performance, sep="\n")
 
