@@ -145,12 +145,7 @@ def plot_exec_time_graph_day(agrs):
     
     return title_image_pairs
 
-if __name__ == "__main__":
-    vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
-
-    
-     # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
-
+def send_day_wise_graphs(vertica_connection):
     args = {
         'opperations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
@@ -170,3 +165,8 @@ if __name__ == "__main__":
 
     mail_title = "Query count and performance of last 4 weeks"
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
+
+if __name__ == "__main__":
+    vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
+
+    send_day_wise_graphs(vertica_connection)    
