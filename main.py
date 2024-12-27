@@ -197,8 +197,8 @@ def send_week_wise_graphs(vertica_connection):
     }
 
     for opperation in args['opperations']:
-        _, day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
-        _, day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
+        day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
+        day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
 
         for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
             if len(user_list) > len(day_wise_dimensions_performance['x']):
