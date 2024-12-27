@@ -1,3 +1,8 @@
+tag:v1.2.0
+Date:24-12-27
+Features:
+1. Added weelky graph generation feature.
+
 tag:v1.1.0
 Date:24-12-24
 Features:
