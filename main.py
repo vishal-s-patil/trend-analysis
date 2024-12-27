@@ -32,50 +32,57 @@ def get_past_date(days_ago, start_date):
 
 def plot_count_graph_day(args):
     title_image_pairs = []
-    user_count_map = {}
 
     for opperation in args['opperations']:
-        if args['days'] == 0:
-            query = f"""select
-                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-                count(1)
-                from netstats.trend_analysis 
-                where date_trunc_day > '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
-                group by date_trunc_day 
-                order by date_trunc_day;"""
-        else:
-            query = f"""select
-                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-                count(1)
-                from netstats.trend_analysis 
-                where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
-                group by date_trunc_day 
-                order by date_trunc_day;"""
-        
-        columns = ["date", "count"]
-
-        df = read(args['vertica_connection'], query, columns)
-
         title = f"{opperation}"
         x_axis = "day"
         y_axis = f"count"
 
-        x = list(map(lambda ts: ts.day, df['date'].to_list()))
-        x = list(map(lambda day: str(day), x))
+        (x, y, user_count_map) = get_day_wise_dimensions_count(opperation, args)
         
-        img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
+        img = create_combined_graph(x, y, user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
     
-    return title_image_pairs, {'x':x, 'y':df["count"].to_list(), 'user_count_map':user_count_map}
+    return title_image_pairs, {'x':x, 'y':y, 'user_count_map':user_count_map}
 
 
-def plot_exec_time_graph_day(args):
+def get_day_wise_dimensions_count(opperation, args):
     user_count_map = {}
-    title_image_pairs = []
 
-    for opperation in args['opperations']:
-        for user in args['users']:
-            user_count_map[user] = [0] * 100
+    if args['days'] == 0:
+        query = f"""select
+            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+            count(1)
+            from netstats.trend_analysis 
+            where date_trunc_day > '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
+            group by date_trunc_day 
+            order by date_trunc_day;"""
+    else:
+        query = f"""select
+            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+            count(1)
+            from netstats.trend_analysis 
+            where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
+            group by date_trunc_day 
+            order by date_trunc_day;"""
+    
+    columns = ["date", "count"]
+
+    df = read(args['vertica_connection'], query, columns)
+
+    x = list(map(lambda ts: ts.day, df['date'].to_list()))
+    x = list(map(lambda day: str(day), x))
+
+    y = df["count"].to_list()
+
+    return (x, y, user_count_map)
+
+
+def get_day_wise_dimensions_performance(opperation, args):
+    user_count_map = {}
+
+    for user in args['users']:
+        user_count_map[user] = [0] * 100
 
         if args['days'] == 0:
             query = f"""select
@@ -120,12 +127,24 @@ def plot_exec_time_graph_day(args):
 
         df = read(vertica_connection, query, columns)
 
+        x = list(map(lambda ts: ts.day, df['date'].to_list()))
+        x = list(map(lambda day: str(day), x))
+
+        y = df["count"].to_list()
+
+        return (x, y, user_count_map)
+
+
+def plot_exec_time_graph_day(args):
+    title_image_pairs = []
+
+    for opperation in args['opperations']:
         title = f"{opperation}"
         x_axis = "day"
         y_axis = f"avg_duration_ms"
 
-        x = list(map(lambda ts: ts.day, df['date'].to_list()))
-        x = list(map(lambda day: str(day), x))
+        (x, y, user_count_map) = get_day_wise_dimensions_performance(opperation)
+        
         if opperation == 'SELECT':
             for user, user_list in user_count_map.items():
                 if len(user_list) > len(x):
@@ -133,13 +152,13 @@ def plot_exec_time_graph_day(args):
                     while diff > 0:
                         user_list.pop()
                         diff -= 1
-            img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
+            img = create_combined_graph(x, y, user_count_map, title, x_axis, y_axis)
         else:
             user_count_map = {}
-            img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
+            img = create_combined_graph(x, y, user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
     
-    return title_image_pairs, {'x':x, 'y':df["count"].to_list(), 'user_count_map':user_count_map}
+    return title_image_pairs, {'x':x, 'y':y, 'user_count_map':user_count_map}
 
 
 def send_day_wise_graphs(vertica_connection):
@@ -177,56 +196,56 @@ def send_week_wise_graphs(vertica_connection):
         'days': number_of_weeks*7,
     }
 
-    _, day_wise_dimensions_count = plot_count_graph_day(args)
-    _, day_wise_dimensions_performance = plot_exec_time_graph_day(args)
-
-    for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
-        if len(user_list) > len(day_wise_dimensions_performance['x']):
-            diff = len(user_list) - len(day_wise_dimensions_performance['x'])
-            while diff > 0:
-                user_list.pop()
-                diff -= 1
-    print(day_wise_dimensions_performance)
-    week_wise_dimensions_count = {
-        'x': [],
-        'y': [],
-        'user_count_map': {}
-    }
-    week_wise_dimensions_performance = {
-        'x': [],
-        'y': [],
-        'user_count_map': {user: [] for user in day_wise_dimensions_performance['user_count_map'].keys()}
-    }
-
-    print(day_wise_dimensions_performance['user_count_map'].items())
-    print()
-
-    for week in range(number_of_weeks):
-        sum_count = 0
-        sum_performance = 0
-        for i in range(7):
-            sum_count +=  day_wise_dimensions_count['y'][week*7 + i]
-            sum_performance +=  day_wise_dimensions_performance['y'][week*7 + i]
-        
-        week_wise_dimensions_count['y'].append(sum_count/7)
-        week_wise_dimensions_performance['y'].append(sum_performance/7)
-        week_wise_dimensions_count['x'].append(week+1)
-        week_wise_dimensions_performance['x'].append(week+1)
-        
+    for opperation in args['opperations']:
+        _, day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
+        _, day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
 
         for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
-            sum_user = 0
+            if len(user_list) > len(day_wise_dimensions_performance['x']):
+                diff = len(user_list) - len(day_wise_dimensions_performance['x'])
+                while diff > 0:
+                    user_list.pop()
+                    diff -= 1
+        print(day_wise_dimensions_performance)
+        week_wise_dimensions_count = {
+            'x': [],
+            'y': [],
+            'user_count_map': {}
+        }
+        week_wise_dimensions_performance = {
+            'x': [],
+            'y': [],
+            'user_count_map': {user: [] for user in day_wise_dimensions_performance['user_count_map'].keys()}
+        }
+
+        print(day_wise_dimensions_performance['user_count_map'].items())
+        print()
+
+        for week in range(number_of_weeks):
+            sum_count = 0
+            sum_performance = 0
             for i in range(7):
-                print(user_list[week*7 + i], end=' ')
-                sum_user += user_list[week*7 + i]
-            print(user, sum_user)
-            week_wise_dimensions_performance['user_count_map'][user].append(sum_user/7)
-    
-    print(week_wise_dimensions_count)
-    print(week_wise_dimensions_performance)
+                sum_count +=  day_wise_dimensions_count['y'][week*7 + i]
+                sum_performance +=  day_wise_dimensions_performance['y'][week*7 + i]
+            
+            week_wise_dimensions_count['y'].append(sum_count/7)
+            week_wise_dimensions_performance['y'].append(sum_performance/7)
+            week_wise_dimensions_count['x'].append(week+1)
+            week_wise_dimensions_performance['x'].append(week+1)
+            
 
+            for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
+                sum_user = 0
+                for i in range(7):
+                    print(user_list[week*7 + i], end=' ')
+                    sum_user += user_list[week*7 + i]
+                print(user, sum_user)
+                week_wise_dimensions_performance['user_count_map'][user].append(sum_user/7)
+        
+        print(week_wise_dimensions_count)
+        print(week_wise_dimensions_performance)
+        print()
 
-    # print(dimensions_count, dimensions_performance, sep="\n")
 
 
 def month_wise_grapgs(vertica_connection):
