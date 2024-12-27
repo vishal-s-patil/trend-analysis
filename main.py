@@ -196,13 +196,15 @@ def send_week_wise_graphs(vertica_connection):
         'days': number_of_weeks*7,
     }
 
+    title = f"{opperation}"
+    x_axis = "week"
+
+    title_image_pairs_count = []
+    title_image_pairs_performance = []
+
     for opperation in args['opperations']:
         day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
         day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
-
-        print('day_wise_dimensions_count', day_wise_dimensions_count)
-        print('day_wise_dimensions_performance', day_wise_dimensions_performance)
-        print()
 
         for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
             if len(user_list) > len(day_wise_dimensions_performance['x']):
@@ -240,7 +242,19 @@ def send_week_wise_graphs(vertica_connection):
                 for i in range(7):
                     sum_user += user_list[week*7 + i]
                 week_wise_dimensions_performance['user_count_map'][user].append(sum_user/7)
+        
+        img_count = create_combined_graph(day_wise_dimensions_count['x'], day_wise_dimensions_count['y'], day_wise_dimensions_count['user_count_map'], title, x_axis, "count")
+        img_performance = create_combined_graph(day_wise_dimensions_performance['x'], day_wise_dimensions_performance['y'], day_wise_dimensions_performance['user_count_map'], title, x_axis, "avg_duration_ms")
+        title_image_pairs_count.append((title, img_count))
+        title_image_pairs_performance.append((title, img_performance))
+    
+    title_image_pairs = []
+    title_image_pairs.append((f"Query Counts {number_of_weeks} Weeks Trend", title_image_pairs_count))
+    title_image_pairs.append((f"Query Execution Time {number_of_weeks} Weeks Trend", title_image_pairs_performance))
+    items_per_row = 3
 
+    mail_title = "Query count and performance of last 4 weeks"
+    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
 
 def month_wise_grapgs(vertica_connection):
