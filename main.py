@@ -201,30 +201,30 @@ def send_week_wise_graphs(vertica_connection):
     title_image_pairs_count = []
     title_image_pairs_performance = []
 
-    for opperation in args['opperations']:
-        title = f"{opperation}"
-        day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
-        day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
+    for week in range(number_of_weeks):
+        for opperation in args['opperations']:
+            title = f"{opperation}"
+            day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
+            day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
 
-        for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
-            if len(user_list) > len(day_wise_dimensions_performance['x']):
-                diff = len(user_list) - len(day_wise_dimensions_performance['x'])
-                while diff > 0:
-                    user_list.pop()
-                    diff -= 1
+            for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
+                if len(user_list) > len(day_wise_dimensions_performance['x']):
+                    diff = len(user_list) - len(day_wise_dimensions_performance['x'])
+                    while diff > 0:
+                        user_list.pop()
+                        diff -= 1
 
-        week_wise_dimensions_count = {
-            'x': [],
-            'y': [],
-            'user_count_map': {}
-        }
-        week_wise_dimensions_performance = {
-            'x': [],
-            'y': [],
-            'user_count_map': {user: [] for user in day_wise_dimensions_performance['user_count_map'].keys()}
-        }
-
-        for week in range(number_of_weeks):
+            week_wise_dimensions_count = {
+                'x': [],
+                'y': [],
+                'user_count_map': {}
+            }
+            week_wise_dimensions_performance = {
+                'x': [],
+                'y': [],
+                'user_count_map': {user: [] for user in day_wise_dimensions_performance['user_count_map'].keys()}
+            }
+        
             sum_count = 0
             sum_performance = 0
             for i in range(7):
