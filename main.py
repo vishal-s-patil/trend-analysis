@@ -28,14 +28,13 @@ vertica_config = {
 def get_past_date(days_ago, start_date):
     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
     past_date = start_date_obj - timedelta(days=days_ago)
+    print(past_date.strftime('%Y-%m-%d'))
     return past_date.strftime('%Y-%m-%d')
 
 
 def plot_count_graph_day(agrs):
     title_image_pairs = []
     user_count_map = {}
-    from_datetime = '2024-11-01'
-    to_datetime = '2024-11-30'
 
     for opperation in agrs['opperations']:
         if args['days'] == 0:
@@ -74,7 +73,6 @@ def plot_count_graph_day(agrs):
 def plot_exec_time_graph_day(agrs):
     user_count_map = {}
     title_image_pairs = []
-
 
     for user in agrs['users']:
         user_count_map[user] = [0] * 100
