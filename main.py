@@ -196,13 +196,13 @@ def send_week_wise_graphs(vertica_connection):
         'days': number_of_weeks*7,
     }
 
-    title = f"{opperation}"
     x_axis = "week"
 
     title_image_pairs_count = []
     title_image_pairs_performance = []
 
     for opperation in args['opperations']:
+        title = f"{opperation}"
         day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
         day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
 
