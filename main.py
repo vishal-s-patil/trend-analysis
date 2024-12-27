@@ -189,7 +189,7 @@ def send_week_wise_graphs(vertica_connection):
             while diff > 0:
                 user_list.pop()
                 diff -= 1
-
+    print(day_wise_dimensions_performance)
     week_wise_dimensions_count = {
         'x': [],
         'y': [],
