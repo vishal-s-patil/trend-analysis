@@ -1,4 +1,4 @@
-from generate_graph import create_combined_graph
+from .generate_graph import create_combined_graph
 from modules.vertica import read
 from helpers import get_past_date
 
