@@ -31,11 +31,13 @@ def get_past_date(days_ago):
     return past_date.strftime('%Y-%m-%d')
 
 
-def plot_count_graph_day(vertica_connection, opperations, users):
+def plot_count_graph_day(agrs):
     title_image_pairs = []
     user_count_map = {}
+    from_datetime = '2024-11-01'
+    to_datetime = '2024-11-30'
 
-    for opperation in opperations:
+    for opperation in agrs['opperations']:
         """
         select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
@@ -49,13 +51,13 @@ def plot_count_graph_day(vertica_connection, opperations, users):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
-            where date_trunc_day >= '2024-11-01' and date_trunc_day <= '2024-11-30' and operation = '{opperation[0]}'
+            where date_trunc_day >= '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
         columns = ["date", "count"]
 
-        df = read(vertica_connection, query, columns)
+        df = read(agrs['vertica_connection'], query, columns)
 
         title = f"{opperation}"
         x_axis = "day"
@@ -69,14 +71,15 @@ def plot_count_graph_day(vertica_connection, opperations, users):
     
     return title_image_pairs
 
-def plot_exec_time_graph_day(vertica_connection, opperations, users):
+def plot_exec_time_graph_day(agrs):
     user_count_map = {}
     title_image_pairs = []
 
-    for user in users:
+
+    for user in agrs['users']:
         user_count_map[user] = [0] * 100
 
-    for opperation in opperations:
+    for opperation in agrs['opperations']:
         '''
         where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}'
         '''
@@ -84,21 +87,21 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             avg(avg_duration_ms) as avg_duration_ms
             from netstats.trend_analysis 
-            where date_trunc_day >= '2024-11-01' and date_trunc_day <= '2024-11-30' and operation = '{opperation[0]}'
+            where date_trunc_day >= '{agrs['from_datetime']}' and date_trunc_day <= '{agrs['to_datetime']}' and operation = '{opperation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
         
         if opperation == 'SELECT':
-            for user in users:
+            for user in agrs['users']:
                 query_with_user = f"""select
                 date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
                 avg(avg_duration_ms) as avg_duration_ms
                 from netstats.trend_analysis 
-                where date_trunc_day >= '2024-11-01' and date_trunc_day <= '2024-11-30' and operation = '{opperation[0]}' and user_name = '{user}'
+                where date_trunc_day >= '{agrs['from_datetime']}' and date_trunc_day <= '{agrs['from_datetime']}' and operation = '{opperation[0]}' and user_name = '{user}'
                 group by date_trunc_day 
                 order by date_trunc_day;"""
                 
-                result = read(vertica_connection, query_with_user, ["date", "count"])
+                result = read(args['vertica_connection'], query_with_user, ["date", "count"])
                 for i, cnt in enumerate(result['count'].to_list()):
                     user_count_map[user][i] = cnt
 
@@ -125,7 +128,7 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
             img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
 
-        for user in users:
+        for user in args['users']:
             user_count_map[user] = [0] * 100
     
     return title_image_pairs
@@ -133,11 +136,19 @@ def plot_exec_time_graph_day(vertica_connection, opperations, users):
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
 
-    opperations = ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']
-    users = ['contact_summary', 'sas', 'campaign_listing', 'campaign_report', 'hansal_summary'] # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
+    
+     # 'sbuilder' #['behaviour', 'campaign_listing', 'contact_summary', 'raman', 'sbuilder', 'vwriter'] 
 
-    title_image_pairs_count = plot_count_graph_day(vertica_connection, opperations, users)
-    title_image_pairs_performance = plot_exec_time_graph_day(vertica_connection, opperations, users)
+    args = {
+        'opperations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
+        'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
+        'vertica_connection': vertica_connection,
+        'from_datetime': '2024-11-01',
+        'to_datetime': '2024-11-30'
+    }
+
+    title_image_pairs_count = plot_count_graph_day(args)
+    title_image_pairs_performance = plot_exec_time_graph_day(args)
 
     title_image_pairs = []
     title_image_pairs.append(("Query Counts 4 Weeks Trend", title_image_pairs_count))
