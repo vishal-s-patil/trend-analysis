@@ -261,12 +261,87 @@ def send_week_wise_graphs(vertica_connection):
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
 
-def month_wise_grapgs(vertica_connection):
-    pass
+def send_month_wise_grapgs(vertica_connection):
+    number_of_months = 2
+    to_date = '2024-12-31'
+
+    args = {
+        'opperations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
+        'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
+        'vertica_connection': vertica_connection,
+        'from_datetime': '2024-11-01',
+        'to_datetime': to_date,
+        'days': number_of_months*30, 
+    }
+
+    x_axis = "month"
+
+    title_image_pairs_count = []
+    title_image_pairs_performance = []
+
+    for opperation in args['opperations']:
+        title = f"{opperation}"
+        day_wise_dimensions_count = get_day_wise_dimensions_count(opperation, args)
+        day_wise_dimensions_performance = get_day_wise_dimensions_performance(opperation, args)
+
+        for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
+            if len(user_list) > len(day_wise_dimensions_performance['x']):
+                diff = len(user_list) - len(day_wise_dimensions_performance['x'])
+                while diff > 0:
+                    user_list.pop()
+                    diff -= 1
+
+        month_wise_dimensions_count = {
+            'x': [],
+            'y': [],
+            'user_count_map': {}
+        }
+        month_wise_dimensions_performance = {
+            'x': [],
+            'y': [],
+            'user_count_map': {user: [] for user in day_wise_dimensions_performance['user_count_map'].keys()}
+        }
+
+        for month in range(number_of_months):
+            sum_count = 0
+            sum_performance = 0
+            for i in range(30):
+                sum_count +=  day_wise_dimensions_count['y'][month*30 + i]
+                sum_performance +=  day_wise_dimensions_performance['y'][month*30 + i]
+            
+            month_wise_dimensions_count['y'].append(sum_count/30)
+            month_wise_dimensions_performance['y'].append(sum_performance/30)
+            month_wise_dimensions_count['x'].append(month+1)
+            month_wise_dimensions_performance['x'].append(month+1)
+            
+
+            for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
+                sum_user = 0
+                for i in range(7):
+                    sum_user += user_list[month*30 + i]
+                month_wise_dimensions_performance['user_count_map'][user].append(sum_user/30)
+        
+        img_count = create_combined_graph(month_wise_dimensions_count['x'], month_wise_dimensions_count['y'], {}, title, x_axis, "count")
+        if opperation == 'SELECT':
+            img_performance = create_combined_graph(month_wise_dimensions_performance['x'], month_wise_dimensions_performance['y'], month_wise_dimensions_performance['user_count_map'], title, x_axis, "avg_duration_ms")
+        else:
+            img_performance = create_combined_graph(month_wise_dimensions_performance['x'], month_wise_dimensions_performance['y'], {}, title, x_axis, "avg_duration_ms")
+
+        title_image_pairs_count.append((title, img_count))
+        title_image_pairs_performance.append((title, img_performance))
+    
+    title_image_pairs = []
+    title_image_pairs.append((f"Query Counts {number_of_months} Weeks Trend", title_image_pairs_count))
+    title_image_pairs.append((f"Query Execution Time {number_of_months} Weeks Trend", title_image_pairs_performance))
+    items_per_row = 3
+
+    mail_title = "Query count and performance of last 2 months."
+    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
 
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
 
     # send_day_wise_graphs(vertica_connection)   
-    send_week_wise_graphs(vertica_connection) 
+    # send_week_wise_graphs(vertica_connection) 
+    send_month_wise_grapgs(vertica_connection)
