@@ -73,10 +73,10 @@ def plot_exec_time_graph_day(args):
     user_count_map = {}
     title_image_pairs = []
 
-    for user in args['users']:
-        user_count_map[user] = [0] * 100
-
     for opperation in args['opperations']:
+        for user in args['users']:
+            user_count_map[user] = [0] * 100
+
         if args['days'] == 0:
             query = f"""select
                 date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
@@ -138,9 +138,6 @@ def plot_exec_time_graph_day(args):
             user_count_map = {}
             img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
-
-        for user in args['users']:
-            user_count_map[user] = [0] * 100
     
     return title_image_pairs, {'x':x, 'y':df["count"].to_list(), 'user_count_map':user_count_map}
 
