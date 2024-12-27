@@ -28,7 +28,6 @@ vertica_config = {
 def get_past_date(days_ago, start_date):
     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
     past_date = start_date_obj - timedelta(days=days_ago)
-    print(past_date.strftime('%Y-%m-%d'))
     return past_date.strftime('%Y-%m-%d')
 
 
@@ -53,6 +52,7 @@ def plot_count_graph_day(agrs):
                 where date_trunc_day >= '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
                 group by date_trunc_day 
                 order by date_trunc_day;"""
+        print(query)
         
         columns = ["date", "count"]
 
