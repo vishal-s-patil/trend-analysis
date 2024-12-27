@@ -25,9 +25,9 @@ vertica_config = {
     "autoCommit": False
 }
 
-def get_past_date(days_ago):
-    today = datetime.today()
-    past_date = today - timedelta(days=days_ago)
+def get_past_date(days_ago, start_date):
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+    past_date = start_date_obj - timedelta(days=days_ago)
     return past_date.strftime('%Y-%m-%d')
 
 
@@ -38,22 +38,22 @@ def plot_count_graph_day(agrs):
     to_datetime = '2024-11-30'
 
     for opperation in agrs['opperations']:
-        """
-        select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            count(1)
-            from netstats.trend_analysis 
-            where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}'
-            group by date_trunc_day 
-            order by date_trunc_day;
-        """
-        query = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            count(1)
-            from netstats.trend_analysis 
-            where date_trunc_day >= '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
+        if args['days'] == 0:
+            query = f"""select
+                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+                count(1)
+                from netstats.trend_analysis 
+                where date_trunc_day >= '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
+                group by date_trunc_day 
+                order by date_trunc_day;"""
+        else:
+            query = f"""select
+                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+                count(1)
+                from netstats.trend_analysis 
+                where date_trunc_day >= '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
+                group by date_trunc_day 
+                order by date_trunc_day;"""
         
         columns = ["date", "count"]
 
@@ -80,26 +80,40 @@ def plot_exec_time_graph_day(agrs):
         user_count_map[user] = [0] * 100
 
     for opperation in agrs['opperations']:
-        '''
-        where date_trunc_day >= '{get_past_date(number_of_days)}' and operation = '{opperation[0]}'
-        '''
-        query = f"""select
-            date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
-            avg(avg_duration_ms) as avg_duration_ms
-            from netstats.trend_analysis 
-            where date_trunc_day >= '{agrs['from_datetime']}' and date_trunc_day <= '{agrs['to_datetime']}' and operation = '{opperation[0]}'
-            group by date_trunc_day 
-            order by date_trunc_day;"""
-        
-        if opperation == 'SELECT':
-            for user in agrs['users']:
-                query_with_user = f"""select
+        if args['days'] == 0:
+            query = f"""select
                 date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
                 avg(avg_duration_ms) as avg_duration_ms
                 from netstats.trend_analysis 
-                where date_trunc_day >= '{agrs['from_datetime']}' and date_trunc_day <= '{agrs['from_datetime']}' and operation = '{opperation[0]}' and user_name = '{user}'
+                where date_trunc_day >= '{agrs['from_datetime']}' and date_trunc_day <= '{agrs['to_datetime']}' and operation = '{opperation[0]}'
                 group by date_trunc_day 
                 order by date_trunc_day;"""
+        else:
+            query = f"""select
+                date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+                avg(avg_duration_ms) as avg_duration_ms
+                from netstats.trend_analysis 
+                where date_trunc_day >= '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{agrs['to_datetime']}' and operation = '{opperation[0]}'
+                group by date_trunc_day 
+                order by date_trunc_day;"""
+        if opperation == 'SELECT':
+            for user in agrs['users']:
+                if args['days'] == 0:
+                    query_with_user = f"""select
+                    date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+                    avg(avg_duration_ms) as avg_duration_ms
+                    from netstats.trend_analysis 
+                    where date_trunc_day >= '{agrs['from_datetime']}' and date_trunc_day <= '{agrs['from_datetime']}' and operation = '{opperation[0]}' and user_name = '{user}'
+                    group by date_trunc_day 
+                    order by date_trunc_day;"""
+                else:
+                    query_with_user = f"""select
+                    date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
+                    avg(avg_duration_ms) as avg_duration_ms
+                    from netstats.trend_analysis 
+                    where date_trunc_day >= '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{agrs['to_datetime']}' and operation = '{opperation[0]}' and user_name = '{user}'
+                    group by date_trunc_day 
+                    order by date_trunc_day;"""
                 
                 result = read(args['vertica_connection'], query_with_user, ["date", "count"])
                 for i, cnt in enumerate(result['count'].to_list()):
@@ -144,7 +158,8 @@ if __name__ == "__main__":
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
         'from_datetime': '2024-11-01',
-        'to_datetime': '2024-11-30'
+        'to_datetime': '2024-12-27',
+        'days': 5,
     }
 
     title_image_pairs_count = plot_count_graph_day(args)
