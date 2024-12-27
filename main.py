@@ -183,6 +183,13 @@ def send_week_wise_graphs(vertica_connection):
     _, dimensions_count = plot_count_graph_day(args)
     _, dimensions_performance = plot_exec_time_graph_day(args)
 
+    for user, user_list in dimensions_performance['user_count_map'].items():
+        if len(user_list) > len(dimensions_performance['x']):
+            diff = len(user_list) - len(dimensions_performance['x'])
+            while diff > 0:
+                user_list.pop()
+                diff -= 1
+
     print(dimensions_count, dimensions_performance, sep="\n")
 
 
