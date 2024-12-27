@@ -159,7 +159,7 @@ if __name__ == "__main__":
         'vertica_connection': vertica_connection,
         'from_datetime': '2024-11-01',
         'to_datetime': '2024-12-27',
-        'days': 5,
+        'days': 10,
     }
 
     title_image_pairs_count = plot_count_graph_day(args)
