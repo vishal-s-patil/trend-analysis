@@ -180,17 +180,26 @@ def send_week_wise_graphs(vertica_connection):
         'days': number_of_weeks*7,
     }
 
-    _, dimensions_count = plot_count_graph_day(args)
-    _, dimensions_performance = plot_exec_time_graph_day(args)
+    _, day_wise_dimensions_count = plot_count_graph_day(args)
+    _, day_wise_dimensions_performance = plot_exec_time_graph_day(args)
 
-    for user, user_list in dimensions_performance['user_count_map'].items():
-        if len(user_list) > len(dimensions_performance['x']):
-            diff = len(user_list) - len(dimensions_performance['x'])
+    for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
+        if len(user_list) > len(day_wise_dimensions_performance['x']):
+            diff = len(user_list) - len(day_wise_dimensions_performance['x'])
             while diff > 0:
                 user_list.pop()
                 diff -= 1
 
-    print(dimensions_count, dimensions_performance, sep="\n")
+    for week in range(number_of_weeks):
+        sum_count = 0
+        sum_performance = 0
+        for i in range(7):
+            sum_count +=  day_wise_dimensions_count['y'][week*7 + i]
+            sum_performance +=  day_wise_dimensions_performance['y'][week*7 + i]
+        print(sum_count)
+        print(sum_performance)
+
+    # print(dimensions_count, dimensions_performance, sep="\n")
 
 
 def month_wise_grapgs(vertica_connection):
