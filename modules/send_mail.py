@@ -2,7 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
-from generate_graph import generate_image
+from modules.generate_graph import generate_image
 
 def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_per_row, subject):
     msg = MIMEMultipart()
