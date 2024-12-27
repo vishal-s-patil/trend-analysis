@@ -38,12 +38,12 @@ def plot_count_graph_day(args):
         x_axis = "day"
         y_axis = f"count"
 
-        (x, y, user_count_map) = get_day_wise_dimensions_count(opperation, args)
+        dimensions_count = get_day_wise_dimensions_count(opperation, args)
         
-        img = create_combined_graph(x, y, user_count_map, title, x_axis, y_axis)
+        img = create_combined_graph(dimensions_count['x'], dimensions_count['y'], dimensions_count['user_count_map'], title, x_axis, y_axis)
         title_image_pairs.append((title, img))
     
-    return title_image_pairs, {'x':x, 'y':y, 'user_count_map':user_count_map}
+    return title_image_pairs
 
 
 def get_day_wise_dimensions_count(opperation, args):
@@ -75,7 +75,7 @@ def get_day_wise_dimensions_count(opperation, args):
 
     y = df["count"].to_list()
 
-    return (x, y, user_count_map)
+    return {'x':x, 'y':y, 'user_count_map':user_count_map}
 
 
 def get_day_wise_dimensions_performance(opperation, args):
@@ -132,7 +132,7 @@ def get_day_wise_dimensions_performance(opperation, args):
 
         y = df["count"].to_list()
 
-        return (x, y, user_count_map)
+        return {'x':x, 'y':y, 'user_count_map':user_count_map}
 
 
 def plot_exec_time_graph_day(args):
@@ -143,22 +143,22 @@ def plot_exec_time_graph_day(args):
         x_axis = "day"
         y_axis = f"avg_duration_ms"
 
-        (x, y, user_count_map) = get_day_wise_dimensions_performance(opperation)
+        dimensions_performance = get_day_wise_dimensions_performance(opperation)
         
         if opperation == 'SELECT':
             for user, user_list in user_count_map.items():
-                if len(user_list) > len(x):
-                    diff = len(user_list) - len(x)
+                if len(user_list) > len(dimensions_performance['x']):
+                    diff = len(user_list) - len(dimensions_performance['x'])
                     while diff > 0:
                         user_list.pop()
                         diff -= 1
-            img = create_combined_graph(x, y, user_count_map, title, x_axis, y_axis)
+            img = create_combined_graph(dimensions_performance['x'], dimensions_performance['y'], dimensions_performance['user_count_map'], title, x_axis, y_axis)
         else:
             user_count_map = {}
-            img = create_combined_graph(x, y, user_count_map, title, x_axis, y_axis)
+            img = create_combined_graph(dimensions_performance['x'], dimensions_performance['y'], dimensions_performance['user_count_map'], title, x_axis, y_axis)
         title_image_pairs.append((title, img))
     
-    return title_image_pairs, {'x':x, 'y':y, 'user_count_map':user_count_map}
+    return title_image_pairs
 
 
 def send_day_wise_graphs(vertica_connection):
