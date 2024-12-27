@@ -184,8 +184,8 @@ def send_day_wise_graphs(vertica_connection):
 
 
 def send_week_wise_graphs(vertica_connection):
-    number_of_weeks = 2
-    to_date = '2024-11-17'
+    number_of_weeks = 4
+    to_date = '2024-11-27'
 
     args = {
         'opperations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
