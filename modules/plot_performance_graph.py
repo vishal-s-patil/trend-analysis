@@ -1,6 +1,6 @@
 from .generate_graph import create_combined_graph
 from modules.vertica import read
-from helpers import get_past_date
+from .helpers import get_past_date
 
 def get_day_wise_dimensions_performance(opperation, args):
     user_count_map = {}
