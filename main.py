@@ -14,8 +14,6 @@ mail_config = {
     "password": os.getenv('GMAIL_APP_PASSWORD')
 }
 
-number_of_days = 24
-
 vertica_config = {
     "host": "vertica-cluster-url-02-prod-us.netcorein.com",
     "user": "devops",
@@ -24,6 +22,7 @@ vertica_config = {
     "port": 5433,
     "autoCommit": False
 }
+
 
 def get_past_date(days_ago, start_date):
     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
@@ -52,7 +51,6 @@ def plot_count_graph_day(args):
                 where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{opperation[0]}'
                 group by date_trunc_day 
                 order by date_trunc_day;"""
-        print(query)
         
         columns = ["date", "count"]
 
@@ -68,7 +66,8 @@ def plot_count_graph_day(args):
         img = create_combined_graph(x, df["count"].to_list(), user_count_map, title, x_axis, y_axis)
         title_image_pairs.append((title, img))
     
-    return title_image_pairs
+    return title_image_pairs, {'x':x, 'y':df["count"].to_list(), 'user_count_map':user_count_map}
+
 
 def plot_exec_time_graph_day(args):
     user_count_map = {}
@@ -143,7 +142,8 @@ def plot_exec_time_graph_day(args):
         for user in args['users']:
             user_count_map[user] = [0] * 100
     
-    return title_image_pairs
+    return title_image_pairs, {'x':x, 'y':df["count"].to_list(), 'user_count_map':user_count_map}
+
 
 def send_day_wise_graphs(vertica_connection):
     args = {
@@ -166,7 +166,32 @@ def send_day_wise_graphs(vertica_connection):
     mail_title = "Query count and performance of last 4 weeks"
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
+
+def send_week_wise_graphs(vertica_connection):
+    number_of_weeks = 2
+    to_date = '2024-12-17'
+
+    args = {
+        'opperations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
+        'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
+        'vertica_connection': vertica_connection,
+        'from_datetime': '2024-11-01',
+        'to_datetime': to_date,
+        'days': number_of_weeks*7,
+    }
+
+    _, dimensions_count = plot_count_graph_day(args)
+    _, dimensions_performance = plot_exec_time_graph_day(args)
+
+    print(dimensions_count, dimensions_performance, sep="\n")
+
+
+def month_wise_grapgs(vertica_connection):
+    pass
+
+
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"], vertica_config["database"], vertica_config["port"], vertica_config["autoCommit"])
 
-    send_day_wise_graphs(vertica_connection)    
+    # send_day_wise_graphs(vertica_connection)   
+    send_week_wise_graphs(vertica_connection) 
