@@ -253,7 +253,7 @@ def send_week_wise_graphs(vertica_connection):
     title_image_pairs.append((f"Query Execution Time {number_of_weeks} Weeks Trend", title_image_pairs_performance))
     items_per_row = 3
 
-    mail_title = "Query count and performance of last 4 weeks"
+    mail_title = "Query count and performance of last 4 weeks."
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
 
