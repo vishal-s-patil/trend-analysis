@@ -216,6 +216,7 @@ def send_week_wise_graphs(vertica_connection):
         for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
             sum_user = 0
             for i in range(7):
+                print(user_list[week*7 + i], end=' ')
                 sum_user += user_list[week*7 + i]
             print(user, sum_user)
             week_wise_dimensions_performance['user_count_map'][user].append(sum_user/7)
