@@ -39,9 +39,11 @@ def send_day_wise_graphs(vertica_connection):
 
     title_image_pairs_count = plot_count_graph_day(args)
     title_image_pairs_performance = plot_exec_time_graph_day(args)
+    title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection)
 
     title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
-                         ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance)]
+                         ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+                         ("Hourly sessions count", title_image_pairs_sessions_count)]
 
     items_per_row = 3
     mail_title = "Query count and performance of last 4 weeks"
@@ -214,7 +216,7 @@ def send_month_wise_graphs(vertica_connection):
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
 
-def send_hour_wise_graphs(vertica_connection):
+def plot_sessions_count_graph_hourly(vertica_connection):
     """
     sends hour_wise sessions count every day.
     """
@@ -227,16 +229,26 @@ def send_hour_wise_graphs(vertica_connection):
         'hours': 24,
     }
 
+    title_image_pairs_sessions_count = []
     hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
-    print(hour_wise_dimensions_session)
 
+    title = 'hourly sessions count'
+    x_axis = 'hour'
+    y_axis = 'count'
+
+    img_session_hourly_count = create_combined_graph(hour_wise_dimensions_session['x'],
+                                                     hour_wise_dimensions_session['y'],
+                                                     hour_wise_dimensions_session['user_count_map'], title, x_axis,
+                                                     y_axis)
+    title_image_pairs_sessions_count.append(("Hourly sessions count", (title, img_session_hourly_count)))
+
+    return title_image_pairs_sessions_count
 
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"],
                                            vertica_config["database"], vertica_config["port"],
                                            vertica_config["autoCommit"])
 
-    # send_day_wise_graphs(vertica_connection)   
+    send_day_wise_graphs(vertica_connection)
     # send_week_wise_graphs(vertica_connection) 
     # send_month_wise_graphs(vertica_connection)
-    send_hour_wise_graphs(vertica_connection)
