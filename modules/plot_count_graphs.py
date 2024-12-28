@@ -20,6 +20,8 @@ def plot_count_graph_day(args):
 
 def get_day_wise_dimensions_count(operation, args):
     user_count_map = {}
+    for user in args['users']:
+        user_count_map[user] = [0] * 100
 
     if args['days'] == 0:
         query = f"""select
@@ -46,5 +48,12 @@ def get_day_wise_dimensions_count(operation, args):
     x = list(map(lambda day: str(day), x))
 
     y = df["count"].to_list()
+
+    for user, user_list in user_count_map:
+        if len(user_list) > len(x):
+            diff = len(user_list) - len(x)
+            while diff > 0:
+                user_list.pop()
+                diff -= 1
 
     return {'x': x, 'y': y, 'user_count_map': user_count_map}
