@@ -54,13 +54,12 @@ def get_day_wise_dimensions_performance(operation, args):
             for i, cnt in enumerate(result['count'].to_list()):
                 user_count_map[user][i] = cnt
 
-        for user, user_list in user_count_map:
+        for user, user_list in user_count_map.items():
             if len(user_list) > len(x):
                 diff = len(user_list) - len(x)
                 while diff > 0:
                     user_list.pop()
                     diff -= 1
-
 
     y = df["count"].to_list()
 
