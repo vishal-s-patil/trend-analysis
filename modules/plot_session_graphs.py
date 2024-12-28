@@ -6,8 +6,11 @@ def get_hour_wise_dimensions_session(args):
     if args['hours'] != 0:
         from_time = get_past_time(args['to_datetime'], args['hours'])
         query = f"""
-        select date_trunc('hour', snapshot_time::timestamp) as time, count(1)
-        from netstats.sessions_full
+        select date_trunc('hour', snapshot_time::timestamp) as time, avg(cnt)
+        from (
+           select date_trunc('min', snapshot_time::timestamp) as snapshot_time, count(1) as cnt
+             from netstats.sessions_full group by snapshot_time
+        ) as x
         where snapshot_time > '{from_time}'
         group by time
         order by time;
@@ -21,8 +24,11 @@ def get_hour_wise_dimensions_session(args):
 
         for user in args['users']:
             query_user = f"""
-            select date_trunc('hour', snapshot_time::timestamp) as time, count(1)
-            from netstats.sessions_full
+            select date_trunc('hour', snapshot_time::timestamp) as time, avg(cnt)
+            from (
+               select date_trunc('min', snapshot_time::timestamp) as snapshot_time, count(1) as cnt
+                 from netstats.sessions_full group by snapshot_time
+            ) as x
             where snapshot_time > '{from_time}' and user_name = '{user}'
             group by time
             order by time;
