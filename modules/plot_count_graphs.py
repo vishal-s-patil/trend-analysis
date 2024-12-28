@@ -11,7 +11,7 @@ def plot_count_graph_day(args):
         y_axis = f"count"
 
         dimensions_count = get_day_wise_dimensions_count(operation, args)
-        print(dimensions_count)
+        print(operation, dimensions_count)
         
         img = create_combined_graph(dimensions_count['x'], dimensions_count['y'], dimensions_count['user_count_map'], title, x_axis, y_axis)
         title_image_pairs.append((title, img))
