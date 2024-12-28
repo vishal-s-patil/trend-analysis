@@ -228,6 +228,7 @@ def send_hour_wise_graphs(vertica_connection):
     }
 
     hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
+    print(hour_wise_dimensions_session)
 
 
 if __name__ == "__main__":

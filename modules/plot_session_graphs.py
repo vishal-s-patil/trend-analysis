@@ -1,5 +1,6 @@
 from modules.helpers import get_past_time
 from modules.vertica import read
+from generate_graph import create_combined_graph
 
 
 def get_hour_wise_dimensions_session(args):
@@ -15,9 +16,7 @@ def get_hour_wise_dimensions_session(args):
 
         df = read(args['vertica_connection'], query, ['hour', 'count'])
 
-        user_count_map = {user: [] * args['hours']*1 for user in args['users']}
-        print(user_count_map)
-
+        user_count_map = {}
         for user in args['users']:
             query_user = f"""
             select date_trunc('hour', snapshot_time::timestamp) as time, count(1)
@@ -27,3 +26,10 @@ def get_hour_wise_dimensions_session(args):
             order by time;
             """
 
+            df_user = read(args['vertica_connection'], query_user, ['hour', 'count'])
+            user_count_map[user] = df_user['count'].to_list()
+
+        x = df['hour'].to_list()
+        y = df['count'].to_list()
+
+        return {'x': x, 'y': y, 'user_count_map': user_count_map}
