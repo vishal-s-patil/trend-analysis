@@ -25,6 +25,12 @@ def get_day_wise_dimensions_performance(operation, args):
             where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{operation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
+
+    columns = ["date", "count"]
+    df = read(args['vertica_connection'], query, columns)
+    x = list(map(lambda ts: ts.day, df['date'].to_list()))
+    x = list(map(lambda day: str(day), x))
+
     if operation == 'SELECT':
         for user in args['users']:
             if args['days'] == 0:
@@ -48,21 +54,15 @@ def get_day_wise_dimensions_performance(operation, args):
             for i, cnt in enumerate(result['count'].to_list()):
                 user_count_map[user][i] = cnt
 
-    columns = ["date", "count"]
+        for user, user_list in user_count_map:
+            if len(user_list) > len(x):
+                diff = len(user_list) - len(x)
+                while diff > 0:
+                    user_list.pop()
+                    diff -= 1
 
-    df = read(args['vertica_connection'], query, columns)
-
-    x = list(map(lambda ts: ts.day, df['date'].to_list()))
-    x = list(map(lambda day: str(day), x))
 
     y = df["count"].to_list()
-
-    for user, user_list in user_count_map:
-        if len(user_list) > len(x):
-            diff = len(user_list) - len(x)
-            while diff > 0:
-                user_list.pop()
-                diff -= 1
 
     return {'x': x, 'y': y, 'user_count_map': user_count_map}
 
