@@ -5,6 +5,7 @@ from modules.plot_count_graphs import plot_count_graph_day, get_day_wise_dimensi
 from modules.plot_performance_graph import plot_exec_time_graph_day, get_day_wise_dimensions_performance
 from modules.send_mail import send_email_with_titles_and_images
 from modules.generate_graph import create_combined_graph
+from modules.plot_session_graphs import get_hour_wise_dimensions_session
 
 load_dotenv()
 
@@ -226,7 +227,7 @@ def send_hour_wise_graphs(vertica_connection):
         'hours': 24,
     }
 
-    hour_wise_dimensions_session= get_hour_wise_dimensions_session()
+    hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
 
 
 if __name__ == "__main__":
