@@ -6,6 +6,7 @@ from modules.plot_performance_graph import plot_exec_time_graph_day, get_day_wis
 from modules.send_mail import send_email_with_titles_and_images
 from modules.generate_graph import create_combined_graph
 from modules.plot_session_graphs import get_hour_wise_dimensions_session
+from modules.plot_queue_graphs import get_hour_wise_dimensions_queue
 
 load_dotenv()
 
@@ -27,6 +28,31 @@ vertica_config = {
 }
 
 
+def plot_queues_count_graph_hourly(vertica_connection):
+    to_datetime = '2024-12-28 19:00'
+    args = {
+        'vertica_connection': vertica_connection,
+        'from_datetime': '2024-11-01',
+        'to_datetime': to_datetime,
+        'hours': 24,
+    }
+
+    title_image_pairs_queues_count = []
+    hour_wise_dimensions_queue = get_hour_wise_dimensions_queue(args)
+
+    title = 'hourly queues count'
+    x_axis = 'hour'
+    y_axis = 'count'
+
+    img_queue_hourly_count = create_combined_graph(hour_wise_dimensions_queue['x'],
+                                                     hour_wise_dimensions_queue['y'],
+                                                     hour_wise_dimensions_queue['user_count_map'], title, x_axis,
+                                                     y_axis)
+    title_image_pairs_queues_count.append((title, img_queue_hourly_count))
+
+    return title_image_pairs_queues_count
+
+
 def send_day_wise_graphs(vertica_connection):
     args = {
         'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
@@ -40,10 +66,12 @@ def send_day_wise_graphs(vertica_connection):
     title_image_pairs_count = plot_count_graph_day(args)
     title_image_pairs_performance = plot_exec_time_graph_day(args)
     title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection)
+    title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection)
 
     title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
                          ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
-                         ("Hourly sessions count", title_image_pairs_sessions_count)]
+                         ("Hourly sessions count", title_image_pairs_sessions_count),
+                         ("Hourly queues count", title_image_pairs_queues_count)]
 
     items_per_row = 3
     mail_title = "Query count and performance of last 4 weeks"
