@@ -8,7 +8,7 @@ def get_hour_wise_dimensions_session(args):
         query = f"""
         select date_trunc('hour', snapshot_time::timestamp), count(1)
         from netstats.sessions_full
-        where snapshot_time > {from_time}
+        where snapshot_time > '{from_time}'
         group by snapshot_time
         order by snapshot_time;
         """
