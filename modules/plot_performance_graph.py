@@ -69,6 +69,8 @@ def plot_exec_time_graph_day(args):
         y_axis = f"avg_duration_ms"
 
         dimensions_performance = get_day_wise_dimensions_performance(operation, args)
+
+        print(dimensions_performance)
         
         if operation == 'SELECT':
             for user, user_list in dimensions_performance['user_count_map'].items():
