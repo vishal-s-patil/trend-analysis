@@ -6,9 +6,6 @@ from .helpers import get_past_date
 def get_day_wise_dimensions_performance(operation, args):
     user_count_map = {}
 
-    for user in args['users']:
-        user_count_map[user] = [0] * 100
-
     if args['days'] == 0:
         query = f"""select
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
@@ -32,6 +29,8 @@ def get_day_wise_dimensions_performance(operation, args):
     x = list(map(lambda day: str(day), x))
 
     if operation == 'SELECT':
+        for user in args['users']:
+            user_count_map[user] = [0] * 100
         for user in args['users']:
             if args['days'] == 0:
                 query_with_user = f"""select
