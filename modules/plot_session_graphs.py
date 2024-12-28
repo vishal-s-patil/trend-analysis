@@ -17,6 +17,9 @@ def get_hour_wise_dimensions_session(args):
 
         user_count_map = {}
         for user in args['users']:
+            user_count_map[user] = [0] * 100
+
+        for user in args['users']:
             query_user = f"""
             select date_trunc('hour', snapshot_time::timestamp) as time, count(1)
             from netstats.sessions_full
@@ -31,4 +34,17 @@ def get_hour_wise_dimensions_session(args):
         x = list(map(lambda ts: str(ts.hour), df['hour'].to_list()))
         y = df['count'].to_list()
 
-        return {'x': x, 'y': y, 'user_count_map': user_count_map}
+        day_wise_dimensions_performance = {
+            'x': x,
+            'y': y,
+            'user_count_map': user_count_map
+        }
+
+        for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
+            if len(user_list) > len(day_wise_dimensions_performance['x']):
+                diff = len(user_list) - len(day_wise_dimensions_performance['x'])
+                while diff > 0:
+                    user_list.pop()
+                    diff -= 1
+
+        return day_wise_dimensions_performance
