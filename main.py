@@ -243,7 +243,7 @@ def plot_sessions_count_graph_hourly(vertica_connection):
                                                      hour_wise_dimensions_session['y'],
                                                      hour_wise_dimensions_session['user_count_map'], title, x_axis,
                                                      y_axis)
-    title_image_pairs_sessions_count.append(("Hourly sessions count", (title, img_session_hourly_count)))
+    title_image_pairs_sessions_count.append((title, img_session_hourly_count))
 
     return title_image_pairs_sessions_count
 
