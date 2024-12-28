@@ -47,4 +47,4 @@ def get_day_wise_dimensions_count(opperation, args):
 
     y = df["count"].to_list()
 
-    return {'x':x, 'y':y, 'user_count_map':user_count_map}
+    return {'x': x, 'y': y, 'user_count_map': user_count_map}
