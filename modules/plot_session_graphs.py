@@ -1,6 +1,5 @@
 from modules.helpers import get_past_time
 from modules.vertica import read
-from generate_graph import create_combined_graph
 
 
 def get_hour_wise_dimensions_session(args):
