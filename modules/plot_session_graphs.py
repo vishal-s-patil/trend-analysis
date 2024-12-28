@@ -29,7 +29,8 @@ def get_hour_wise_dimensions_session(args):
             """
 
             df_user = read(args['vertica_connection'], query_user, ['hour', 'count'])
-            user_count_map[user] = df_user['count'].to_list()
+            for i, item in enumerate(df_user['count'].to_list()):
+                user_count_map[user][i] = item
 
         x = list(map(lambda ts: str(ts.hour), df['hour'].to_list()))
         y = df['count'].to_list()
