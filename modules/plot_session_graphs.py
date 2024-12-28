@@ -14,9 +14,10 @@ def get_hour_wise_dimensions_session(args):
         """
 
         df = read(args['vertica_connection'], query, ['hour', 'count'])
-        print(df)
 
-        return
+        user_count_map = {user: [] * args['hours']*1 for user in args['users']}
+        print(user_count_map)
+
         for user in args['users']:
             query_user = f"""
             select date_trunc('hour', snapshot_time::timestamp) as time, count(1)
