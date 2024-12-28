@@ -9,9 +9,10 @@ def get_hour_wise_dimensions_session(args):
         select date_trunc('hour', snapshot_time::timestamp) as time, avg(cnt)
         from (
            select date_trunc('min', snapshot_time::timestamp) as snapshot_time, count(1) as cnt
-             from netstats.sessions_full group by snapshot_time
+             from netstats.sessions_full
+             where snapshot_time > '{from_time}'
+             group by snapshot_time
         ) as x
-        where snapshot_time > '{from_time}'
         group by time
         order by time;
         """
@@ -27,9 +28,10 @@ def get_hour_wise_dimensions_session(args):
             select date_trunc('hour', snapshot_time::timestamp) as time, avg(cnt)
             from (
                select date_trunc('min', snapshot_time::timestamp) as snapshot_time, count(1) as cnt
-                 from netstats.sessions_full group by snapshot_time
+                 from netstats.sessions_full
+                 where snapshot_time > '{from_time}' and user_name = '{user}'
+                 group by snapshot_time
             ) as x
-            where snapshot_time > '{from_time}' and user_name = '{user}'
             group by time
             order by time;
             """
