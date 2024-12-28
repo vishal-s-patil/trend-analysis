@@ -2,6 +2,7 @@ from .generate_graph import create_combined_graph
 from modules.vertica import read
 from .helpers import get_past_date
 
+
 def get_day_wise_dimensions_performance(operation, args):
     user_count_map = {}
 
@@ -56,7 +57,7 @@ def get_day_wise_dimensions_performance(operation, args):
 
     y = df["count"].to_list()
 
-    return {'x':x, 'y':y, 'user_count_map':user_count_map}
+    return {'x': x, 'y': y, 'user_count_map': user_count_map}
 
 
 def plot_exec_time_graph_day(args):
@@ -70,7 +71,7 @@ def plot_exec_time_graph_day(args):
         dimensions_performance = get_day_wise_dimensions_performance(operation, args)
         
         if operation == 'SELECT':
-            for user, user_list in user_count_map.items():
+            for user, user_list in dimensions_performance['user_count_map'].items():
                 if len(user_list) > len(dimensions_performance['x']):
                     diff = len(user_list) - len(dimensions_performance['x'])
                     while diff > 0:
