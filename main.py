@@ -222,7 +222,7 @@ def plot_sessions_count_graph_hourly(vertica_connection):
     """
     sends hour_wise sessions count every day.
     """
-    to_datetime = '2024-12-28 16:00'
+    to_datetime = '2024-12-28 17:00'
     args = {
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
