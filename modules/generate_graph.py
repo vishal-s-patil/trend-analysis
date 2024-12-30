@@ -27,7 +27,7 @@ def generate_image(x, y):
 
 
 def create_line_graph(x, y, user_count_map, title, x_axis, y_axis):
-    plt.figure(figsize=(20, 5))
+    plt.figure(figsize=(16, 5))
     plt.bar(x, y, label=y_axis, color='skyblue', alpha=0.7)
     # plt.plot(x, y, label=y_axis, color='skyblue', marker='o')
     idx = 0
@@ -46,7 +46,7 @@ def create_line_graph(x, y, user_count_map, title, x_axis, y_axis):
     plt.legend()
 
     img_buffer = BytesIO()
-    plt.savefig(img_buffer, format='png')
+    plt.savefig(img_buffer, format='jpeg')
     img_buffer.seek(0)  # Reset the buffer position to the beginning
 
     plt.clf()
