@@ -55,33 +55,6 @@ def plot_queues_count_graph_hourly(vertica_connection):
     return title_image_pairs_queues_count
 
 
-def plot_system_metrix_avg_graph_hourly(vertica_connection):
-    to_date = '2024-12-30'
-    args = {
-        'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
-        'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
-        'vertica_connection': vertica_connection,
-        'from_datetime': '2024-11-01',
-        'to_datetime': to_date,
-        'days': 1,
-    }
-
-    title_image_pairs_system_metrix_avg = []
-    day_wise_dimensions_system_metrix = get_day_wise_dimensions_system_metrix(args)
-
-    # title = 'daily system metrix average usage'
-    # x_axis = 'node name'
-    # y_axis = '% usage'
-    #
-    # img_queue_hourly_count = create_combined_graph(day_wise_dimensions_system_metrix['x'],
-    #                                                day_wise_dimensions_system_metrix['y'],
-    #                                                day_wise_dimensions_system_metrix['user_count_map'], title, x_axis,
-    #                                                y_axis)
-    # title_image_pairs_system_metrix_avg.append((title, img_queue_hourly_count))
-    #
-    # return title_image_pairs_system_metrix_avg
-
-
 def send_day_wise_graphs(vertica_connection):
     args = {
         'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
@@ -92,20 +65,19 @@ def send_day_wise_graphs(vertica_connection):
         'days': 10,
     }
 
-    # title_image_pairs_count = plot_count_graph_day(args)
-    # title_image_pairs_performance = plot_exec_time_graph_day(args)
-    # title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection)
-    # title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection)
-    title_image_pairs_system_metrix_avg = plot_system_metrix_avg_graph_hourly(vertica_connection)
+    title_image_pairs_count = plot_count_graph_day(args)
+    title_image_pairs_performance = plot_exec_time_graph_day(args)
+    title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection)
+    title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection)
 
-    # title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
-    #                      ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
-    #                      ("Hourly sessions count", title_image_pairs_sessions_count),
-    #                      ("Hourly queues count", title_image_pairs_queues_count)]
+    title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
+                         ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+                         ("Hourly sessions count", title_image_pairs_sessions_count),
+                         ("Hourly queues count", title_image_pairs_queues_count)]
 
-    # items_per_row = 3
-    # mail_title = "Query count and performance of last 4 weeks"
-    # send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
+    items_per_row = 3
+    mail_title = "Query count and performance of last 4 weeks"
+    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
 
 def send_week_wise_graphs(vertica_connection):
@@ -308,5 +280,3 @@ if __name__ == "__main__":
                                            vertica_config["autoCommit"])
 
     send_day_wise_graphs(vertica_connection)
-    # send_week_wise_graphs(vertica_connection) 
-    # send_month_wise_graphs(vertica_connection)

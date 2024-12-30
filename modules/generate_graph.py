@@ -23,6 +23,7 @@ def generate_image(x, y):
     plt.close(fig)
     return image_binary
 
+
 def create_combined_graph(x, y, user_count_map, title, x_axis, y_axis, file_name="combined_graph.png"):
     plt.bar(x, y, label=y_axis, color='skyblue', alpha=0.7)
     
@@ -31,12 +32,13 @@ def create_combined_graph(x, y, user_count_map, title, x_axis, y_axis, file_name
     if len(user_count_map) != 0: 
         for user, lst in user_count_map.items():
             plt.plot(x, lst, label=user, color=colors[idx], marker='o')
-            idx+=1
+            idx += 1
     
     # plt.title(title)
     plt.xlabel(x_axis)
     plt.ylabel(y_axis)
-    
+
+    plt.xticks([])
     plt.legend()
     
     img_buffer = BytesIO()
