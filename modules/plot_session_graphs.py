@@ -5,10 +5,11 @@ from modules.vertica import read
 def get_hour_wise_dimensions_session(args):
     if args['hours'] != 0:
         from_time = get_past_time(args['to_datetime'], args['hours'])
+        print(from_time)
         query = f"""
                 select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
                 from netstats.sessions_full
-                where snapshot_time >= '{from_time}'
+                where snapshot_time >= '{from_time}' and where statement_id is not null
                 group by min_date_trunc
                 order by min_date_trunc;
                 """
@@ -23,7 +24,7 @@ def get_hour_wise_dimensions_session(args):
             query_user = f"""
             select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
             from netstats.sessions_full
-            where snapshot_time >= '{from_time}' and user_name = '{user}'
+            where snapshot_time >= '{from_time}' and user_name = '{user}' and where statement_id is not null
             group by min_date_trunc
             order by min_date_trunc;
             """
