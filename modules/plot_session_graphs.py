@@ -33,7 +33,10 @@ def get_hour_wise_dimensions_session(args):
                 user_count_map[user][i] = item
 
         x = list(map(lambda ts: str(ts.hour), df['hour'].to_list()))
+        print('len(x)', len(x))
         y = df['count'].to_list()
+        print('len(y)', len(y))
+
 
         day_wise_dimensions_performance = {
             'x': x,
