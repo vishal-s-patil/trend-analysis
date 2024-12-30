@@ -42,7 +42,7 @@ def plot_queues_count_graph_hourly(vertica_connection):
     title_image_pairs_queues_count = []
     hour_wise_dimensions_queue = get_hour_wise_dimensions_queue(args)
 
-    title = 'hourly queues count'
+    title = 'minute wise queue count'
     x_axis = 'hour'
     y_axis = 'count'
 
@@ -73,8 +73,8 @@ def send_day_wise_graphs(vertica_connection):
     title_image_pairs = [
         # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
         #  ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
-        ("Hourly sessions count", title_image_pairs_sessions_count),
-        ("Hourly queues count", title_image_pairs_queues_count)]
+        ("Minute wise sessions count", title_image_pairs_sessions_count),
+        ("Minute wise queue count", title_image_pairs_queues_count)]
 
     items_per_row = 3
     mail_title = "Query count and performance of last 4 weeks"
@@ -263,7 +263,7 @@ def plot_sessions_count_graph_hourly(vertica_connection):
     title_image_pairs_sessions_count = []
     hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
 
-    title = 'hourly sessions count'
+    title = 'Minute wise sessions count'
     x_axis = 'hour'
     y_axis = 'count'
 
