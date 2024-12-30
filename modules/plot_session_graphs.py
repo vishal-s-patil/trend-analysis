@@ -35,6 +35,18 @@ def get_hour_wise_dimensions_session(args):
             for i, item in enumerate(df_user['count'].to_list()):
                 user_count_map[user][i] = item
 
+        query_inactive = f"""
+        select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
+        from netstats.sessions_full
+        where snapshot_time >= '{from_time}' and statement_id is null
+        group by min_date_trunc
+        order by min_date_trunc;
+        """
+
+        df_inactive = read(args['vertica_connection'], query_inactive, ['hour', 'count'])
+        for i, item in enumerate(df_inactive['count'].to_list()):
+            user_count_map['inactive sessions'][i] = item
+
         x = list(map(lambda ts: str(ts.day) + ":" + str(ts.hour) + ":" + str(ts.minute), df['hour'].to_list()))
         y = df['count'].to_list()
 
