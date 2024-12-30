@@ -2,7 +2,6 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
-from modules.generate_graph import generate_image
 
 
 def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_per_row, subject):
@@ -14,10 +13,12 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
     body = "<html><body>"
 
     for heading, title_image_pairs in lst_title_image_pairs:
+        print(heading)
         body += f"<h2 style='text-align:center;'>{heading}</h2>"
         body += "<table style='width:100%; border-collapse:collapse;'>"
         
         for idx, (title, img) in enumerate(title_image_pairs, start=1):
+            print("   ", title)
             if (idx - 1) % items_per_row == 0:
                 body += "<tr>"
             
