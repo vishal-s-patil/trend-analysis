@@ -34,9 +34,6 @@ def create_combined_graph(x, y, user_count_map, title, x_axis, y_axis, file_name
             plt.plot(x, lst, label=user, color=colors[idx], marker='o')
             idx += 1
 
-    step = max(len(x) // 5, 1)
-    plt.xticks(ticks=[x[i] for i in range(0, len(x), step)], labels=[x[i] for i in range(0, len(x), step)])
-    
     # plt.title(title)
     plt.xlabel(x_axis)
     plt.ylabel(y_axis)
