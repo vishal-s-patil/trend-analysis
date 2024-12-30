@@ -253,7 +253,7 @@ def plot_sessions_count_graph_hourly(vertica_connection):
     """
     to_datetime = '2024-12-30 17:00'
     args = {
-        'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
+        'users': ['contact_summary', 'contact_summary_ds', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
         'from_datetime': '2024-11-01',
         'to_datetime': to_datetime,
