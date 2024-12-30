@@ -17,7 +17,7 @@ def get_hour_wise_dimensions_queue(args):
 
         user_count_map = {}
         for user in args['pools']:
-            user_count_map[user] = [0] * 100
+            user_count_map[user] = [0] * 5000
 
         for user in args['pools']:
             query_user = f"""
