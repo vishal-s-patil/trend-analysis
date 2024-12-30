@@ -48,9 +48,9 @@ def plot_queues_count_graph_hourly(vertica_connection):
     y_axis = 'count'
 
     img_queue_hourly_count = create_line_graph(hour_wise_dimensions_queue['x'],
-                                                   hour_wise_dimensions_queue['y'],
-                                                   hour_wise_dimensions_queue['user_count_map'], title, x_axis,
-                                                   y_axis)
+                                               hour_wise_dimensions_queue['y'],
+                                               hour_wise_dimensions_queue['user_count_map'], title, x_axis,
+                                               y_axis)
     title_image_pairs_queues_count.append((title, img_queue_hourly_count))
 
     return title_image_pairs_queues_count
