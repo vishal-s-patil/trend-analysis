@@ -41,7 +41,7 @@ def create_line_graph(x, y, user_count_map, title, x_axis, y_axis):
     plt.ylabel(y_axis)
 
     step = max(len(x) // 10, 1)
-    plt.xticks(ticks=range(0, len(x), step), labels=[x[i] for i in range(0, len(x), step)])
+    plt.xticks(ticks=[x[i] for i in range(0, len(x), step)], labels=[x[i] for i in range(0, len(x), step)]) # range(0, len(x), step)
 
     plt.legend()
 
