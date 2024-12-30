@@ -28,11 +28,11 @@ def get_hour_wise_dimensions_session(args):
             order by min_date_trunc;
             """
 
-            df_user = read(args['vertica_connection'], query_user, ['min', 'count'])
+            df_user = read(args['vertica_connection'], query_user, ['hour', 'count'])
             for i, item in enumerate(df_user['count'].to_list()):
                 user_count_map[user][i] = item
 
-        x = list(map(lambda ts: str(ts.minute), df['min'].to_list()))
+        x = list(map(lambda ts: str(ts.minute), df['hour'].to_list()))
         y = df['count'].to_list()
 
         day_wise_dimensions_performance = {
