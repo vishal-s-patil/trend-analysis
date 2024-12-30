@@ -5,14 +5,13 @@ from email.mime.image import MIMEImage
 
 
 def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_per_row, subject):
-    msg = MIMEMultipart('related')
+    msg = MIMEMultipart()
     msg['From'] = mail_config["sender_email"]
     msg['To'] = ", ".join(mail_config["receiver_emails"])
     msg['Subject'] = subject
 
     body = "<html><body>"
 
-    # Loop through the title and image pairs
     for heading, title_image_pairs in lst_title_image_pairs:
         body += f"<h2 style='text-align:center;'>{heading}</h2>"
         body += "<table style='width:100%; border-collapse:collapse;'>"
@@ -23,26 +22,20 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
 
             body += f"<td style='width:{100 // items_per_row}%; text-align:center; padding:10px;'>"
             body += f"<h4>{title}</h4>"
-
-            # Create Content-ID for inline image
-            content_id = f"image{heading.replace(' ', '_')}_{idx}"
-            img_mime = MIMEImage(img, _subtype='png')
-            img_mime.add_header('Content-ID', f'<{content_id}>')
-            msg.attach(img_mime)
-
-            # Embed the image in HTML
-            body += f'<img src="cid:{content_id}" alt="Image {idx}" style="width:300px;height:auto;">'
+            img = MIMEImage(img, _subtype='png')
+            img.add_header('Content-ID', f'<image{heading.split(" ")[1]}_{idx}>')
+            msg.attach(img)
+            body += f'<img src="cid:image{heading.split(" ")[1]}_{idx}" alt="Image {idx}" style="width:300px;height:auto;">'
             body += "</td>"
 
             if idx % items_per_row == 0:
-                body += "</tr>"  # Close the current row
+                body += "</tr><tr>"  # Close the current row and prepare for the next set of titles/images
 
         body += "</tr></table><br>"
 
     body += "</body></html>"
     msg.attach(MIMEText(body, 'html'))
 
-    # Send the email
     try:
         with smtplib.SMTP(mail_config["smtp_server"], mail_config["smtp_port"]) as server:
             server.starttls()
