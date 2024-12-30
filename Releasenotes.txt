@@ -1,3 +1,11 @@
+tag:v1.5.0
+Date:24-12-28
+Features:
+1. Converted hourly session and queue counts to min wise session and queue counts.
+2. Added functions to fill the gaps min, hour, day, month wise in datetime fields of dataframe.
+Fixes:
+1. Refactored code.
+
 tag:v1.4.0
 Date:24-12-28
 Features:
