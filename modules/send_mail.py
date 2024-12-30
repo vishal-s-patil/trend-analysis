@@ -25,7 +25,7 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
             img = MIMEImage(img, _subtype='png')
             img.add_header('Content-ID', f'<image{heading.split(" ")[1]}_{idx}>')
             msg.attach(img)
-            body += f'<img src="cid:image{heading.split(" ")[1]}_{idx}" alt="Image {idx}" style="width:500px;height:auto;">'
+            body += f'<img src="cid:image{heading.split(" ")[1]}_{idx}" alt="Image {idx}" style="width:auto;height:auto;">'
             body += "</td>"
 
             if idx % items_per_row == 0:
