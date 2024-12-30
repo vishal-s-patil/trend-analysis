@@ -42,17 +42,17 @@ def plot_queues_count_graph_hourly(vertica_connection):
     title_image_pairs_queues_count = []
     hour_wise_dimensions_queue = get_hour_wise_dimensions_queue(args)
 
-    title = 'hourly queues count'
-    x_axis = 'hour'
-    y_axis = 'count'
-
-    img_queue_hourly_count = create_combined_graph(hour_wise_dimensions_queue['x'],
-                                                     hour_wise_dimensions_queue['y'],
-                                                     hour_wise_dimensions_queue['user_count_map'], title, x_axis,
-                                                     y_axis)
-    title_image_pairs_queues_count.append((title, img_queue_hourly_count))
-
-    return title_image_pairs_queues_count
+    # title = 'hourly queues count'
+    # x_axis = 'hour'
+    # y_axis = 'count'
+    #
+    # img_queue_hourly_count = create_combined_graph(hour_wise_dimensions_queue['x'],
+    #                                                  hour_wise_dimensions_queue['y'],
+    #                                                  hour_wise_dimensions_queue['user_count_map'], title, x_axis,
+    #                                                  y_axis)
+    # title_image_pairs_queues_count.append((title, img_queue_hourly_count))
+    #
+    # return title_image_pairs_queues_count
 
 
 def plot_system_metrix_avg_graph_hourly(vertica_connection):
