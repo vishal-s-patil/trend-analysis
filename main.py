@@ -31,7 +31,7 @@ vertica_config = {
 
 
 def plot_queues_count_graph_hourly(vertica_connection):
-    to_datetime = '2024-12-28 19:00'
+    to_datetime = '2024-12-30 17:00'
     args = {
         'vertica_connection': vertica_connection,
         'pools': ['contact_summary_pool', 'sas_pool', 'campaign_listing_pool', 'campaign_report_pool'],
@@ -251,7 +251,7 @@ def plot_sessions_count_graph_hourly(vertica_connection):
     """
     sends hour_wise sessions count every day.
     """
-    to_datetime = '2024-12-28 17:00'
+    to_datetime = '2024-12-30 17:00'
     args = {
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
