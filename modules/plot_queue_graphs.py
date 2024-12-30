@@ -6,15 +6,11 @@ def get_hour_wise_dimensions_queue(args):
     if args['hours'] != 0:
         from_time = get_past_time(args['to_datetime'], args['hours'])
         query = f"""
-        select date_trunc('hour', queue_entry_timestamp::timestamp) as time, avg(cnt)
-        from (
-            select date_trunc('min', queue_entry_timestamp::timestamp) as queue_entry_timestamp, count(1) as cnt
-              from netstats.resource_queues_full
-              where queue_entry_timestamp > '{from_time}'
-              group by queue_entry_timestamp
-        ) as x
+        select date_trunc('min', queue_entry_timestamp::timestamp) as time, count(1)
+        from netstats.resource_queues_full
+        where queue_entry_timestamp >= '{from_time}'
         group by time
-        order by time;
+        order by time
         """
 
         df = read(args['vertica_connection'], query, ['hour', 'count'])
