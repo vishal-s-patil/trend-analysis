@@ -16,25 +16,25 @@ def get_hour_wise_dimensions_queue(args):
         df = read(args['vertica_connection'], query, ['hour', 'count'])
 
         user_count_map = {}
-        # for user in args['users']:
-        #     user_count_map[user] = [0] * 100
-        #
-        # for user in args['users']:
-        #     query_user = f"""
-        #     select date_trunc('hour', queue_entry_timestamp::timestamp) as time, avg(cnt)
-        #     from (
-        #         select date_trunc('min', queue_entry_timestamp::timestamp) as queue_entry_timestamp, count(1) as cnt
-        #           from netstats.resource_queues_full
-        #           where queue_entry_timestamp > '{from_time}' and
-        #           group by queue_entry_timestamp
-        #     ) as x
-        #     group by time
-        #     order by time;
-        #     """
-        #
-        #     df_user = read(args['vertica_connection'], query_user, ['hour', 'count'])
-        #     for i, item in enumerate(df_user['count'].to_list()):
-        #         user_count_map[user][i] = item
+        for user in args['pools']:
+            user_count_map[user] = [0] * 100
+
+        for user in args['pools']:
+            query_user = f"""
+            select date_trunc('hour', queue_entry_timestamp::timestamp) as time, avg(cnt)
+            from (
+                select date_trunc('min', queue_entry_timestamp::timestamp) as queue_entry_timestamp, count(1) as cnt
+                  from netstats.resource_queues_full
+                  where queue_entry_timestamp > '{from_time}' and pool_name = '{user}'
+                  group by queue_entry_timestamp
+            ) as x
+            group by time
+            order by time;
+            """
+
+            df_user = read(args['vertica_connection'], query_user, ['hour', 'count'])
+            for i, item in enumerate(df_user['count'].to_list()):
+                user_count_map[user][i] = item
 
         x = list(map(lambda ts: str(ts.hour) + ":" + str(ts.minute), df['hour'].to_list()))
         y = df['count'].to_list()

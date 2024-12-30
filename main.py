@@ -34,6 +34,7 @@ def plot_queues_count_graph_hourly(vertica_connection):
     to_datetime = '2024-12-28 19:00'
     args = {
         'vertica_connection': vertica_connection,
+        'pools': ['contact_summary_pool', 'sas_pool', 'campaign_listing_pool', 'campaign_report_pool'],
         'from_datetime': '2024-11-01',
         'to_datetime': to_datetime,
         'hours': 24,
