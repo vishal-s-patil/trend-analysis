@@ -1,5 +1,6 @@
 from modules.helpers import get_past_time
 from modules.vertica import read
+from modules.generate_graph import create_line_graph
 
 
 def get_hour_wise_dimensions_session(args):
@@ -49,3 +50,32 @@ def get_hour_wise_dimensions_session(args):
                     diff -= 1
 
         return day_wise_dimensions_performance
+
+
+def plot_sessions_count_graph_hourly(vertica_connection):
+    """
+    sends hour_wise sessions count every day.
+    """
+    to_datetime = '2024-12-30 17:00'
+    args = {
+        'users': ['contact_summary', 'contact_summary_ds', 'sas', 'campaign_listing', 'campaign_report'],
+        'vertica_connection': vertica_connection,
+        'from_datetime': '2024-11-01',
+        'to_datetime': to_datetime,
+        'hours': 24,
+    }
+
+    title_image_pairs_sessions_count = []
+    hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
+
+    title = 'Minute wise sessions count'
+    x_axis = 'hour'
+    y_axis = 'count'
+
+    img_session_hourly_count = create_line_graph(hour_wise_dimensions_session['x'],
+                                                 hour_wise_dimensions_session['y'],
+                                                 hour_wise_dimensions_session['user_count_map'], title, x_axis,
+                                                 y_axis)
+    title_image_pairs_sessions_count.append((title, img_session_hourly_count))
+
+    return title_image_pairs_sessions_count

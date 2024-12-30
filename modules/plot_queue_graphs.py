@@ -1,5 +1,6 @@
 from modules.helpers import get_past_time
 from modules.vertica import read
+from modules.generate_graph import create_line_graph
 
 
 def get_hour_wise_dimensions_queue(args):
@@ -49,3 +50,29 @@ def get_hour_wise_dimensions_queue(args):
                     diff -= 1
 
         return day_wise_dimensions_performance
+
+
+def plot_queues_count_graph_hourly(vertica_connection):
+    to_datetime = '2024-12-30 17:00'
+    args = {
+        'vertica_connection': vertica_connection,
+        'pools': ['contact_summary_pool', 'sas_pool', 'campaign_listing_pool', 'campaign_report_pool'],
+        'from_datetime': '2024-11-01',
+        'to_datetime': to_datetime,
+        'hours': 24,
+    }
+
+    title_image_pairs_queues_count = []
+    hour_wise_dimensions_queue = get_hour_wise_dimensions_queue(args)
+
+    title = 'minute wise queue count'
+    x_axis = 'hour'
+    y_axis = 'count'
+
+    img_queue_hourly_count = create_line_graph(hour_wise_dimensions_queue['x'],
+                                               hour_wise_dimensions_queue['y'],
+                                               hour_wise_dimensions_queue['user_count_map'], title, x_axis,
+                                               y_axis)
+    title_image_pairs_queues_count.append((title, img_queue_hourly_count))
+
+    return title_image_pairs_queues_count
