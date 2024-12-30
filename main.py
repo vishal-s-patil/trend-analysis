@@ -76,7 +76,7 @@ def send_day_wise_graphs(vertica_connection):
                          ("Minute wise sessions count", title_image_pairs_sessions_count),
                          ("Minute wise queue count", title_image_pairs_queues_count)]
 
-    items_per_row = 3
+    items_per_row = 6
     mail_title = "Query count and performance of last 4 weeks"
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
 
