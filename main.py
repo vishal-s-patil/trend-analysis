@@ -6,7 +6,7 @@ from modules.vertica import create_connection
 from modules.plot_count_graphs import plot_count_graph_day, get_day_wise_dimensions_count
 from modules.plot_performance_graph import plot_exec_time_graph_day, get_day_wise_dimensions_performance
 from modules.send_mail import send_email_with_titles_and_images
-from modules.generate_graph import create_combined_graph
+from modules.generate_graph import create_combined_graph, create_line_graph
 from modules.plot_session_graphs import get_hour_wise_dimensions_session
 from modules.plot_queue_graphs import get_hour_wise_dimensions_queue
 
@@ -65,13 +65,14 @@ def send_day_wise_graphs(vertica_connection):
         'days': 10,
     }
 
-    title_image_pairs_count = plot_count_graph_day(args)
-    title_image_pairs_performance = plot_exec_time_graph_day(args)
+    # title_image_pairs_count = plot_count_graph_day(args)
+    # title_image_pairs_performance = plot_exec_time_graph_day(args)
     title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection)
     title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection)
 
-    title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
-                         ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+    title_image_pairs = [
+                        # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
+                        #  ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
                          ("Hourly sessions count", title_image_pairs_sessions_count),
                          ("Hourly queues count", title_image_pairs_queues_count)]
 
@@ -266,7 +267,7 @@ def plot_sessions_count_graph_hourly(vertica_connection):
     x_axis = 'hour'
     y_axis = 'count'
 
-    img_session_hourly_count = create_combined_graph(hour_wise_dimensions_session['x'],
+    img_session_hourly_count = create_line_graph(hour_wise_dimensions_session['x'],
                                                      hour_wise_dimensions_session['y'],
                                                      hour_wise_dimensions_session['user_count_map'], title, x_axis,
                                                      y_axis)

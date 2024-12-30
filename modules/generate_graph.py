@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 from io import BytesIO
 
-# Create a simple bar chart using Matplotlib
+colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'black', 'yellow', 'cyan', 'magenta', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', '#FF5733', '#33FF57', '#5733FF', 'aqua', 'azure', 'beige', 'chocolate', 'coral', 'gold', 'indigo', 'khaki', 'lavender', 'navy', 'olive', 'teal']
+
+
 def generate_image(x, y):
     y1, y2 = y
     fig, ax = plt.subplots()
@@ -24,10 +26,32 @@ def generate_image(x, y):
     return image_binary
 
 
+def create_line_graph(x, y, user_count_map, title, x_axis, y_axis):
+    plt.plot(x, y, label=y_axis, color='skyblue', marker='o')
+    idx = 0
+    if len(user_count_map) != 0:
+        for user, lst in user_count_map.items():
+            plt.plot(x, lst, label=user, color=colors[idx], marker='o')
+            idx += 1
+
+    # plt.title(title)
+    plt.xlabel(x_axis)
+    plt.ylabel(y_axis)
+
+    plt.legend()
+
+    img_buffer = BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)  # Reset the buffer position to the beginning
+
+    plt.clf()
+
+    return img_buffer.getvalue()
+
+
 def create_combined_graph(x, y, user_count_map, title, x_axis, y_axis, file_name="combined_graph.png"):
     plt.bar(x, y, label=y_axis, color='skyblue', alpha=0.7)
-    
-    colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'black', 'yellow', 'cyan', 'magenta', 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', '#FF5733', '#33FF57', '#5733FF', 'aqua', 'azure', 'beige', 'chocolate', 'coral', 'gold', 'indigo', 'khaki', 'lavender', 'navy', 'olive', 'teal']
+
     idx = 0
     if len(user_count_map) != 0: 
         for user, lst in user_count_map.items():
