@@ -5,7 +5,6 @@ from modules.vertica import read
 def get_hour_wise_dimensions_session(args):
     if args['hours'] != 0:
         from_time = get_past_time(args['to_datetime'], args['hours'])
-        print(from_time)
         query = f"""
                 select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
                 from netstats.sessions_full
