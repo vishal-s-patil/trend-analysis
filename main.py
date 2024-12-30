@@ -46,10 +46,10 @@ def plot_queues_count_graph_hourly(vertica_connection):
     x_axis = 'hour'
     y_axis = 'count'
 
-    img_queue_hourly_count = create_combined_graph(hour_wise_dimensions_queue['x'],
-                                                     hour_wise_dimensions_queue['y'],
-                                                     hour_wise_dimensions_queue['user_count_map'], title, x_axis,
-                                                     y_axis)
+    img_queue_hourly_count = create_line_graph(hour_wise_dimensions_queue['x'],
+                                                   hour_wise_dimensions_queue['y'],
+                                                   hour_wise_dimensions_queue['user_count_map'], title, x_axis,
+                                                   y_axis)
     title_image_pairs_queues_count.append((title, img_queue_hourly_count))
 
     return title_image_pairs_queues_count
@@ -71,10 +71,10 @@ def send_day_wise_graphs(vertica_connection):
     title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection)
 
     title_image_pairs = [
-                        # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
-                        #  ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
-                         ("Hourly sessions count", title_image_pairs_sessions_count),
-                         ("Hourly queues count", title_image_pairs_queues_count)]
+        # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
+        #  ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+        ("Hourly sessions count", title_image_pairs_sessions_count),
+        ("Hourly queues count", title_image_pairs_queues_count)]
 
     items_per_row = 3
     mail_title = "Query count and performance of last 4 weeks"
@@ -268,12 +268,13 @@ def plot_sessions_count_graph_hourly(vertica_connection):
     y_axis = 'count'
 
     img_session_hourly_count = create_line_graph(hour_wise_dimensions_session['x'],
-                                                     hour_wise_dimensions_session['y'],
-                                                     hour_wise_dimensions_session['user_count_map'], title, x_axis,
-                                                     y_axis)
+                                                 hour_wise_dimensions_session['y'],
+                                                 hour_wise_dimensions_session['user_count_map'], title, x_axis,
+                                                 y_axis)
     title_image_pairs_sessions_count.append((title, img_session_hourly_count))
 
     return title_image_pairs_sessions_count
+
 
 if __name__ == "__main__":
     vertica_connection = create_connection(vertica_config["host"], vertica_config["user"], vertica_config["password"],
