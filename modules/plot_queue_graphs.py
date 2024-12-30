@@ -1,6 +1,8 @@
 from modules.helpers import get_past_time
 from modules.vertica import read
 from modules.generate_graph import create_line_graph
+from modules.helpers import fill_min_level_date
+from datetime import datetime
 
 
 def get_hour_wise_dimensions_queue(args):
@@ -15,6 +17,7 @@ def get_hour_wise_dimensions_queue(args):
         """
 
         df = read(args['vertica_connection'], query, ['hour', 'count'])
+        df = fill_min_level_date(from_time, datetime.now(), df, 'hour')
 
         user_count_map = {}
         for user in args['pools']:

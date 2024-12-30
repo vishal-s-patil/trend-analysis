@@ -1,6 +1,7 @@
-from modules.helpers import get_past_time
+from modules.helpers import get_past_time, fill_min_level_date
 from modules.vertica import read
 from modules.generate_graph import create_line_graph
+from datetime import datetime
 
 
 def get_hour_wise_dimensions_session(args):
@@ -15,6 +16,7 @@ def get_hour_wise_dimensions_session(args):
                 """
 
         df = read(args['vertica_connection'], query, ['hour', 'count'])
+        df = fill_min_level_date(from_time, datetime.now(), df, 'hour')
 
         user_count_map = {}
         for user in args['users']:
