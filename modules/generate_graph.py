@@ -27,6 +27,7 @@ def generate_image(x, y):
 
 
 def create_line_graph(x, y, user_count_map, title, x_axis, y_axis):
+    plt.figure(figsize=(15, 6))
     plt.plot(x, y, label=y_axis, color='skyblue', marker='o')
     idx = 0
     if len(user_count_map) != 0:
