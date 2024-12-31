@@ -52,6 +52,8 @@ def get_hour_wise_dimensions_session(args):
         x = list(map(lambda ts: str(ts.day) + ":" + str(ts.hour) + ":" + str(ts.minute), df['hour'].to_list()))
         y = df['count'].to_list()
 
+        print('func len', len(x), len(y))
+
         day_wise_dimensions_performance = {
             'x': x,
             'y': y,
