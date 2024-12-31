@@ -10,7 +10,7 @@ def get_hour_wise_dimensions_session(args):
         query = f"""
                 select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
                 from netstats.sessions_full
-                where snapshot_time >= '{from_time}'
+                where snapshot_time >= '{from_time}' and snapshot_time <= {args['to_datetime']}
                 group by min_date_trunc
                 order by min_date_trunc;
                 """
