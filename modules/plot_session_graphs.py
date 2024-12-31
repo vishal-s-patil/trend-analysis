@@ -20,7 +20,7 @@ def get_hour_wise_dimensions_session(args):
 
         user_count_map = {}
         for user in args['users']:
-            user_count_map[user] = [0] * 5000
+            user_count_map[user] = [0] * 10000
 
         for user in args['users']:
             query_user = f"""
