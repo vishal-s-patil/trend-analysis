@@ -44,7 +44,7 @@ def get_hour_wise_dimensions_session(args):
         """
 
         df_inactive = read(args['vertica_connection'], query_inactive, ['hour', 'count'])
-        user_count_map['inactive sessions'] = [0] * 5000
+        user_count_map['inactive sessions'] = [0] * 10000
         for i, item in enumerate(df_inactive['count'].to_list()):
             user_count_map['inactive sessions'][i] = item
 
