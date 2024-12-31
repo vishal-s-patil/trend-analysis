@@ -20,7 +20,7 @@ def get_hour_wise_dimensions_session(args):
 
         user_count_map = {}
         for user in args['users']:
-            user_count_map[user] = [0] * 200000
+            user_count_map[user] = [0] * 5000
 
         for user in args['users']:
             query_user = f"""
@@ -44,7 +44,7 @@ def get_hour_wise_dimensions_session(args):
         """
 
         df_inactive = read(args['vertica_connection'], query_inactive, ['hour', 'count'])
-        user_count_map['inactive sessions'] = [0] * 200000
+        user_count_map['inactive sessions'] = [0] * 5000
         for i, item in enumerate(df_inactive['count'].to_list()):
 
             user_count_map['inactive sessions'][i] = item
@@ -83,6 +83,7 @@ def plot_sessions_count_graph_hourly(vertica_connection, to_datetime):
 
     title_image_pairs_sessions_count = []
     hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
+    print('session: completed inner func')
 
     title = 'Minute wise sessions count'
     x_axis = 'hour'
