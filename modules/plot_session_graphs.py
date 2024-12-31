@@ -45,8 +45,11 @@ def get_hour_wise_dimensions_session(args):
 
         df_inactive = read(args['vertica_connection'], query_inactive, ['hour', 'count'])
         user_count_map['inactive sessions'] = [0] * 10000
+        maxi = 0
         for i, item in enumerate(df_inactive['count'].to_list()):
+            maxi = max(maxi, i)
             user_count_map['inactive sessions'][i] = item
+        print('maxi', maxi)
 
         x = list(map(lambda ts: str(ts.day) + ":" + str(ts.hour) + ":" + str(ts.minute), df['hour'].to_list()))
         y = df['count'].to_list()
