@@ -7,6 +7,7 @@ from datetime import datetime
 def get_hour_wise_dimensions_session(args):
     if args['hours'] != 0:
         from_time = get_past_time(args['to_datetime'], args['hours'])
+        print('times', from_time, args['to_datetime'])
         query = f"""
                 select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
                 from netstats.sessions_full
