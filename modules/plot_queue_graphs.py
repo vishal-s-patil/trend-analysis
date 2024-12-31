@@ -11,7 +11,7 @@ def get_hour_wise_dimensions_queue(args):
         query = f"""
         select date_trunc('min', queue_entry_timestamp::timestamp) as time, count(1)
         from netstats.resource_queues_full
-        where queue_entry_timestamp >= '{from_time}' and snapshot_time <= {args['to_datetime']}
+        where queue_entry_timestamp >= '{from_time}' and snapshot_time <= '{args['to_datetime']}'
         group by time
         order by time
         """
