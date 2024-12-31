@@ -197,13 +197,13 @@ def send_month_wise_graphs(vertica_connection):
 
 
 def send_day_wise_graphs(vertica_connection):
-    to_datetime = '2024-09-26 00:00'
+    to_datetime = '2024-11-20 00:00'
     args = {
         'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
-        'from_datetime': '2024-09-26',
-        'to_datetime': '2024-09-26',
+        'from_datetime': '2024-11-20',
+        'to_datetime': '2024-11-20',
         'days': 5,
     }
 
@@ -219,7 +219,7 @@ def send_day_wise_graphs(vertica_connection):
 
     items_per_row = 3
     mail_title = "Query count and performance of last 4 weeks"
-    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title)
+    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title, to_datetime)
 
 
 if __name__ == "__main__":

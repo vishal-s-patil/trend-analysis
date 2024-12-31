@@ -4,13 +4,14 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
 
-def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_per_row, subject):
+def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_per_row, subject, to_datetime):
     msg = MIMEMultipart()
     msg['From'] = mail_config["sender_email"]
     msg['To'] = ", ".join(mail_config["receiver_emails"])
     msg['Subject'] = subject
 
     body = "<html><body>"
+    body += f"<h3>{to_datetime}<h3/>"
 
     for heading, title_image_pairs in lst_title_image_pairs:
         body += f"<h2 style='text-align:center;'>{heading}</h2>"
