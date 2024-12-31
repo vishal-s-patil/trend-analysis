@@ -203,7 +203,7 @@ def send_day_wise_graphs(vertica_connection):
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
         'from_datetime': '2024-11-01',
-        'to_datetime': to_datetime,
+        'to_datetime': '2024-09-15',
         'days': 10,
     }
 
