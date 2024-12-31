@@ -32,8 +32,11 @@ def get_hour_wise_dimensions_session(args):
             """
 
             df_user = read(args['vertica_connection'], query_user, ['hour', 'count'])
+            maxi = 0
             for i, item in enumerate(df_user['count'].to_list()):
-                user_count_map[user][i] = item
+                maxi = max(i, maxi)
+                # user_count_map[user][i] = item
+            print('maxi', maxi)
 
         query_inactive = f"""
         select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
