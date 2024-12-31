@@ -197,13 +197,13 @@ def send_month_wise_graphs(vertica_connection):
 
 
 def send_day_wise_graphs(vertica_connection):
-    to_datetime = '2024-12-15 01:00'
+    to_datetime = '2024-09-26 00:00'
     args = {
         'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
-        'from_datetime': '2024-12-10',
-        'to_datetime': '2024-12-15',
+        'from_datetime': '2024-09-26',
+        'to_datetime': '2024-09-26',
         'days': 5,
     }
 
