@@ -208,8 +208,11 @@ def send_day_wise_graphs(vertica_connection):
     }
 
     title_image_pairs_count = plot_count_graph_day(args)
+    print('completed query count')
     title_image_pairs_performance = plot_exec_time_graph_day(args)
+    print('completed performance')
     title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
+    print('completed sessions')
     title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
     title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
