@@ -27,17 +27,13 @@ def generate_image(x, y):
 
 
 def create_line_graph(x, y, user_count_map, title, x_axis, y_axis):
-    print('line graph creation creation started')
-    print('(x, y)', len(x), len(y))
     plt.bar(x, y, label=y_axis, color='skyblue', alpha=0.7)
-    print('created bar')
     # plt.plot(x, y, label=y_axis, color='skyblue', marker='o')
     idx = 0
     if len(user_count_map) != 0:
         for user, lst in user_count_map.items():
             plt.plot(x, lst, label=user, color=colors[idx], marker='o')
             idx += 1
-    print('created lines')
 
     # plt.title(title)
     plt.xlabel(x_axis)

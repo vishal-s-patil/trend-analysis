@@ -7,7 +7,6 @@ from datetime import datetime
 def get_hour_wise_dimensions_session(args):
     if args['hours'] != 0:
         from_time = get_past_time(args['to_datetime'], args['hours'])
-        print('times', from_time, args['to_datetime'])
         query = f"""
                 select date_trunc('min', snapshot_time::timestamp) as min_date_trunc, count(1)
                 from netstats.sessions_full
@@ -53,8 +52,6 @@ def get_hour_wise_dimensions_session(args):
         x = list(map(lambda ts: str(ts.day) + ":" + str(ts.hour) + ":" + str(ts.minute), df['hour'].to_list()))
         y = df['count'].to_list()
 
-        print('func len', len(x), len(y))
-
         day_wise_dimensions_performance = {
             'x': x,
             'y': y,
@@ -86,7 +83,6 @@ def plot_sessions_count_graph_hourly(vertica_connection, to_datetime):
 
     title_image_pairs_sessions_count = []
     hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
-    print('session: completed inner func')
 
     title = 'Minute wise sessions count'
     x_axis = 'hour'
@@ -96,7 +92,6 @@ def plot_sessions_count_graph_hourly(vertica_connection, to_datetime):
                                                  hour_wise_dimensions_session['y'],
                                                  hour_wise_dimensions_session['user_count_map'], title, x_axis,
                                                  y_axis)
-    print('graph created')
     title_image_pairs_sessions_count.append((title, img_session_hourly_count))
 
     return title_image_pairs_sessions_count

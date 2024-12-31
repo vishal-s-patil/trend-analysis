@@ -202,17 +202,14 @@ def send_day_wise_graphs(vertica_connection):
         'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
-        'from_datetime': '2024-09-05',
+        'from_datetime': '2024-09-10',
         'to_datetime': '2024-09-15',
-        'days': 10,
+        'days': 5,
     }
 
     title_image_pairs_count = plot_count_graph_day(args)
-    print('completed query count')
     title_image_pairs_performance = plot_exec_time_graph_day(args)
-    print('completed performance')
     title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
-    print('completed sessions')
     title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
     title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
