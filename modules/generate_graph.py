@@ -28,6 +28,7 @@ def generate_image(x, y):
 
 def create_line_graph(x, y, user_count_map, title, x_axis, y_axis):
     print('line graph creation creation started')
+    print('(x, y)', len(x), len(y))
     plt.bar(x, y, label=y_axis, color='skyblue', alpha=0.7)
     print('created bar')
     # plt.plot(x, y, label=y_axis, color='skyblue', marker='o')
