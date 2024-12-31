@@ -67,11 +67,11 @@ def get_hour_wise_dimensions_session(args):
         return day_wise_dimensions_performance
 
 
-def plot_sessions_count_graph_hourly(vertica_connection):
+def plot_sessions_count_graph_hourly(vertica_connection, to_datetime):
     """
     sends hour_wise sessions count every day.
     """
-    to_datetime = '2024-12-30 17:00'
+
     args = {
         'users': ['contact_summary', 'contact_summary_ds', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,

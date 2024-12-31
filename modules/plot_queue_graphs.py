@@ -55,8 +55,7 @@ def get_hour_wise_dimensions_queue(args):
         return day_wise_dimensions_performance
 
 
-def plot_queues_count_graph_hourly(vertica_connection):
-    to_datetime = '2024-12-30 17:00'
+def plot_queues_count_graph_hourly(vertica_connection, to_datetime):
     args = {
         'vertica_connection': vertica_connection,
         'pools': ['contact_summary_pool', 'sas_pool', 'campaign_listing_pool', 'campaign_report_pool'],

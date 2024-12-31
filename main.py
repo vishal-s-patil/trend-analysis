@@ -197,19 +197,20 @@ def send_month_wise_graphs(vertica_connection):
 
 
 def send_day_wise_graphs(vertica_connection):
+    to_datetime = '2024-09-15 00:00'
     args = {
         'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
         'from_datetime': '2024-11-01',
-        'to_datetime': '2024-12-17',
+        'to_datetime': to_datetime,
         'days': 10,
     }
 
     title_image_pairs_count = plot_count_graph_day(args)
     title_image_pairs_performance = plot_exec_time_graph_day(args)
-    title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection)
-    title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection)
+    title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
+    title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
     title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
                          ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
