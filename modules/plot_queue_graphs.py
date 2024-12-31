@@ -13,7 +13,7 @@ def get_hour_wise_dimensions_queue(args):
         from netstats.resource_queues_full
         where queue_entry_timestamp >= '{from_time}' and snapshot_time <= '{args['to_datetime']}'
         group by time
-        order by time
+        order by time;
         """
 
         df = read(args['vertica_connection'], query, ['hour', 'count'])
@@ -27,7 +27,7 @@ def get_hour_wise_dimensions_queue(args):
             query_user = f"""
             select date_trunc('min', queue_entry_timestamp::timestamp) as time, count(1)
             from netstats.resource_queues_full
-            where queue_entry_timestamp >= '{from_time}' and pool_name = '{user}'
+            where queue_entry_timestamp >= '{from_time}' and snapshot_time <= '{args['to_datetime']}' and pool_name = '{user}'
             group by time
             order by time
             """
