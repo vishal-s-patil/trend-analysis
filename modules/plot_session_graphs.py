@@ -58,6 +58,10 @@ def get_hour_wise_dimensions_session(args):
             'user_count_map': user_count_map
         }
 
+        with open('session_train_test.data', 'a') as file:
+            file.write(','.join(map(str, x)) + '\n')
+            file.write(','.join(map(str, y)) + '\n')
+
         for user, user_list in day_wise_dimensions_performance['user_count_map'].items():
             if len(user_list) > len(day_wise_dimensions_performance['x']):
                 diff = len(user_list) - len(day_wise_dimensions_performance['x'])
