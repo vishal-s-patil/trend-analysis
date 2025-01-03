@@ -207,14 +207,15 @@ def send_day_wise_graphs(vertica_connection):
         'days': 5,
     }
 
-    title_image_pairs_count = plot_count_graph_day(args)
-    title_image_pairs_performance = plot_exec_time_graph_day(args)
+    # title_image_pairs_count = plot_count_graph_day(args)
+    # title_image_pairs_performance = plot_exec_time_graph_day(args)
     title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
-    title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
+    # title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
-    title_image_pairs = [("Query Counts 4 Weeks Trend", title_image_pairs_count),
-                         ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
-                         ("Minute wise queue count", title_image_pairs_queues_count),
+    title_image_pairs = [
+                         # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
+                         # ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+                         # ("Minute wise queue count", title_image_pairs_queues_count),
                          ("Minute wise sessions count", title_image_pairs_sessions_count)]
 
     items_per_row = 3
