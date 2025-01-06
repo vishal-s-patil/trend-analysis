@@ -229,31 +229,31 @@ def send_day_wise_graphs(vertica_connection):
         '2024-11-28 00:00',
         '2024-09-25 00:00'
     ]
-    for to_datetime in datetime_lst:
-        # to_datetime = '2024-09-26 00:00'
-        args = {
-            'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
-            'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
-            'vertica_connection': vertica_connection,
-            # 'from_datetime': '2024-11-21',
-            'to_datetime': to_datetime[:10], #'2024-09-26',
-            'days': 5,
-        }
+    # for to_datetime in datetime_lst:
+    to_datetime = '2024-11-02 00:00'
+    args = {
+        'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
+        'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
+        'vertica_connection': vertica_connection,
+        # 'from_datetime': '2024-11-21',
+        'to_datetime': to_datetime[:10], #'2024-09-26',
+        'days': 5,
+    }
 
-        # title_image_pairs_count = plot_count_graph_day(args)
-        # title_image_pairs_performance = plot_exec_time_graph_day(args)
-        title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
-        # title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
+    # title_image_pairs_count = plot_count_graph_day(args)
+    # title_image_pairs_performance = plot_exec_time_graph_day(args)
+    title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
+    # title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
-        title_image_pairs = [
-                             # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
-                             # ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
-                             # ("Minute wise queue count", title_image_pairs_queues_count),
-                             ("Minute wise sessions count", title_image_pairs_sessions_count)]
+    title_image_pairs = [
+                         # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
+                         # ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+                         # ("Minute wise queue count", title_image_pairs_queues_count),
+                         ("Minute wise sessions count", title_image_pairs_sessions_count)]
 
-        # items_per_row = 3
-        # mail_title = "Query count and performance of last 4 weeks"
-        # send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title, to_datetime)
+    items_per_row = 3
+    mail_title = "Query count and performance of last 4 weeks"
+    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title, to_datetime)
 
 
 if __name__ == "__main__":
