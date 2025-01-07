@@ -217,8 +217,8 @@ def send_day_wise_graphs(vertica_connection):
     title_image_pairs = [
                          (f"Query Counts for last {days} from {to_datetime}.", title_image_pairs_count),
                          (f"Query Execution Time for last {days} from {to_datetime}.", title_image_pairs_performance),
-                         ("Minute wise queue count", title_image_pairs_queues_count),
-                         ("Minute wise sessions count", title_image_pairs_sessions_count)]
+                         (f"Minute-wise queue count for {to_datetime}", title_image_pairs_queues_count),
+                         (f"Minute-wise sessions count for {to_datetime}", title_image_pairs_sessions_count)]
 
     items_per_row = 3
     mail_title = f"Query count and performance for last {days} from {to_datetime}."
