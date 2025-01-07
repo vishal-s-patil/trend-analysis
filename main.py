@@ -215,13 +215,13 @@ def send_day_wise_graphs(vertica_connection):
     title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
     title_image_pairs = [
-                         ("Query Counts 4 Weeks Trend", title_image_pairs_count),
-                         ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+                         (f"Query Counts for last {days} from {to_datetime}.", title_image_pairs_count),
+                         (f"Query Execution Time for last {days} from {to_datetime}.", title_image_pairs_performance),
                          ("Minute wise queue count", title_image_pairs_queues_count),
                          ("Minute wise sessions count", title_image_pairs_sessions_count)]
 
     items_per_row = 3
-    mail_title = "Query count and performance of last 4 weeks"
+    mail_title = f"Query count and performance for last {days} from {to_datetime}."
     send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title, to_datetime)
 
 

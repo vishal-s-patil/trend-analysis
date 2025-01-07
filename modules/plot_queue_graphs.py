@@ -67,7 +67,7 @@ def plot_queues_count_graph_hourly(vertica_connection, to_datetime):
     title_image_pairs_queues_count = []
     hour_wise_dimensions_queue = get_hour_wise_dimensions_queue(args)
 
-    title = 'minute wise queue count'
+    title = ''
     x_axis = 'hour'
     y_axis = 'count'
 

@@ -88,7 +88,7 @@ def plot_sessions_count_graph_hourly(vertica_connection, to_datetime):
     title_image_pairs_sessions_count = []
     hour_wise_dimensions_session = get_hour_wise_dimensions_session(args)
 
-    title = 'Minute wise sessions count'
+    title = ''
     x_axis = 'hour'
     y_axis = 'count'
 
