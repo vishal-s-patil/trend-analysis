@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 import os
 import sys
 
-from modules.plot_system_metrix_graphs import get_day_wise_dimensions_system_metrix
 from modules.vertica import create_connection
 from modules.plot_count_graphs import plot_count_graph_day, get_day_wise_dimensions_count
 from modules.plot_performance_graph import plot_exec_time_graph_day, get_day_wise_dimensions_performance
@@ -211,14 +210,15 @@ def send_day_wise_graphs(vertica_connection):
 
     title_image_pairs_count = plot_count_graph_day(args)
     title_image_pairs_performance = plot_exec_time_graph_day(args)
-    title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
-    title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
+    title_image_pairs_sessions_queues_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
+    title_image_pairs_sessions_queues_count += plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
     title_image_pairs = [
-                         (f"Query Counts for last {days} from {to_datetime}.", title_image_pairs_count),
-                         (f"Query Execution Time for last {days} from {to_datetime}.", title_image_pairs_performance),
-                         (f"Minute-wise queue count for {to_datetime}", title_image_pairs_queues_count),
-                         (f"Minute-wise sessions count for {to_datetime}", title_image_pairs_sessions_count)]
+                         (f"Query Counts for last {days} days from {to_datetime}.", title_image_pairs_count),
+                         (f"Query Execution Time for last {days} days from {to_datetime}.", title_image_pairs_performance),
+                         (f"Minute-wise queue/sessions count for {to_datetime}", title_image_pairs_sessions_queues_count),
+                         # (f"Minute-wise sessions count for {to_datetime}", title_image_pairs_sessions_count)
+                        ]
 
     items_per_row = 3
     mail_title = f"Query count and performance for last {days} from {to_datetime}."
