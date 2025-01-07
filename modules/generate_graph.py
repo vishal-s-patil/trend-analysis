@@ -66,6 +66,9 @@ def create_combined_graph(x, y, user_count_map, title, x_axis, y_axis, file_name
     plt.xlabel(x_axis)
     plt.ylabel(y_axis)
 
+    step = max(len(x) // 5, 1)
+    plt.xticks(ticks=[x[i] for i in range(0, len(x), step)], labels=[x[i] for i in range(0, len(x), step)])
+
     plt.legend()
     
     img_buffer = BytesIO()
