@@ -8,7 +8,7 @@ def plot_count_graph_day(args):
     title_image_pairs = []
 
     for operation in args['operations']:
-        title = f"{operation}"
+        title = f"{operation} query counts"
         x_axis = "day"
         y_axis = f"count"
 

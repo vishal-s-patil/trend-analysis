@@ -71,7 +71,7 @@ def plot_exec_time_graph_day(args):
     title_image_pairs = []
 
     for operation in args['operations']:
-        title = f"{operation}"
+        title = f"{operation} query performance"
         x_axis = "day"
         y_axis = f"avg_duration_ms"
 
