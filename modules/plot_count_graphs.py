@@ -28,7 +28,7 @@ def get_day_wise_dimensions_count(operation, args):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
-            where date_trunc_day >= '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{operation[0]}'
+            where date_trunc_day > '{args['from_datetime']}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{operation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
     else:
@@ -36,14 +36,14 @@ def get_day_wise_dimensions_count(operation, args):
             date_trunc('day', date_trunc_time::timestamp) as date_trunc_day,
             count(1)
             from netstats.trend_analysis 
-            where date_trunc_day >= '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{operation[0]}'
+            where date_trunc_day > '{get_past_date(args['days'], args['to_datetime'])}' and date_trunc_day <= '{args['to_datetime']}' and operation = '{operation[0]}'
             group by date_trunc_day 
             order by date_trunc_day;"""
     
     columns = ["date", "count"]
 
     df = read(args['vertica_connection'], query, columns)
-    df = fill_day_level_date(get_past_date(args['days'], args['to_datetime']), args['to_datetime'], df, "date")
+    df = fill_day_level_date(get_past_date(args['days']-1, args['to_datetime']), args['to_datetime'], df, "date")
 
     x = list(map(lambda ts: ts.day, df['date'].to_list()))
     x = list(map(lambda day: str(day), x))
