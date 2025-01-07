@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import sys
 
 from modules.plot_system_metrix_graphs import get_day_wise_dimensions_system_metrix
 from modules.vertica import create_connection
@@ -197,58 +198,26 @@ def send_month_wise_graphs(vertica_connection):
 
 
 def send_day_wise_graphs(vertica_connection):
-    # datetime_lst = [
-    #     '2024-12-04 00:00',
-    #     '2024-11-20 00:00',
-    #     '2024-11-21 00:00',
-    #     '2024-11-22 00:00',
-    #     '2024-11-23 00:00',
-    #     '2024-11-24 00:00'
-    # ]
-    # datetime_lst = [
-    #     '2024-11-01 00:00',
-    #     '2024-11-02 00:00',
-    #     '2024-11-03 00:00',
-    #     '2024-11-04 00:00',
-    #     '2024-11-05 00:00',
-    #     '2024-11-06 00:00',
-    #     '2024-11-07 00:00',
-    #     '2024-11-08 00:00',
-    #     '2024-11-09 00:00',
-    #     '2024-11-10 00:00',
-    #     '2024-12-05 00:00',
-    #     '2024-12-06 00:00',
-    #     '2024-12-07 00:00',
-    #     '2024-12-08 00:00',
-    #     '2024-12-09 00:00',
-    # ]
-    datetime_lst = [
-        '2024-11-25 00:00',
-        '2024-11-26 00:00',
-        '2024-11-27 00:00',
-        '2024-11-28 00:00',
-        '2024-09-25 00:00'
-    ]
-    # for to_datetime in datetime_lst:
-    to_datetime = '2024-11-02 00:00'
+    to_datetime = sys.argv[1]
+    days = int(sys.argv[2])
     args = {
         'operations': ['SELECT', 'COPY', 'INSERT', 'UPDATE', 'DELETE', 'MERGE'],
         'users': ['contact_summary', 'sas', 'campaign_listing', 'campaign_report'],
         'vertica_connection': vertica_connection,
         # 'from_datetime': '2024-11-21',
-        'to_datetime': to_datetime[:10], #'2024-09-26',
-        'days': 5,
+        'to_datetime': to_datetime[:10],  # '2024-09-26',
+        'days': days,
     }
 
-    # title_image_pairs_count = plot_count_graph_day(args)
-    # title_image_pairs_performance = plot_exec_time_graph_day(args)
+    title_image_pairs_count = plot_count_graph_day(args)
+    title_image_pairs_performance = plot_exec_time_graph_day(args)
     title_image_pairs_sessions_count = plot_sessions_count_graph_hourly(vertica_connection, to_datetime)
-    # title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
+    title_image_pairs_queues_count = plot_queues_count_graph_hourly(vertica_connection, to_datetime)
 
     title_image_pairs = [
-                         # ("Query Counts 4 Weeks Trend", title_image_pairs_count),
-                         # ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
-                         # ("Minute wise queue count", title_image_pairs_queues_count),
+                         ("Query Counts 4 Weeks Trend", title_image_pairs_count),
+                         ("Query Execution Time 4 Weeks Trend", title_image_pairs_performance),
+                         ("Minute wise queue count", title_image_pairs_queues_count),
                          ("Minute wise sessions count", title_image_pairs_sessions_count)]
 
     items_per_row = 3

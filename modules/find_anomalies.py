@@ -6,7 +6,7 @@ import re
 # File paths
 # train_file_name = '../session_train.data'
 train_file_name = 'train_test_2.csv'
-# test_file_name = '../session_test.data'
+test_file_name = 'sep_dec_test_data.csv'
 output_file_name = 'output.out'
 
 # Read training data (date, count) pairs
@@ -20,21 +20,37 @@ with open(train_file_name, 'r') as file:
             match = re.match(pattern, line)
             if match:
                 date, count = match.groups()
-                if line_no <= 20000:
-                    training_data.append((date, float(count)))
+                # if line_no <= 20000:
+                training_data.append((date, float(count)))
                 # else:
+                # test_data.append((date, float(count)))
+            else:
+                print(f"Skipping invalid line {line_no}: {line}")
+        except Exception as e:
+            print(f"Error processing line {line_no}: {line} -> {e}")
+
+with open(test_file_name, 'r') as file:
+    for line_no, line in enumerate(file, start=1):
+        try:
+            line = line.strip()
+            match = re.match(pattern, line)
+            if match:
+                date, count = match.groups()
+                # if line_no <= 20000:
+                #     training_data.append((date, float(count)))
+                # else:
+                # training_data.append((date, float(count)))
                 test_data.append((date, float(count)))
             else:
                 print(f"Skipping invalid line {line_no}: {line}")
         except Exception as e:
             print(f"Error processing line {line_no}: {line} -> {e}")
 
-
 # Extract counts for training
 X_train = np.array([count for _, count in training_data]).reshape(-1, 1)
 
 # Train the Isolation Forest model
-model = IsolationForest(contamination=0.10, random_state=42)
+model = IsolationForest(contamination=0.15, random_state=42)
 model.fit(X_train)
 
 
@@ -45,7 +61,7 @@ model.fit(X_train)
 #             test_data.append((date, float(count)))
 
 
-def check_outliers_with_persistence(new_data, model, persistence_thresh=1400, predictions_file='predictions_file.out',
+def check_outliers_with_persistence(new_data, model, persistence_thresh=1440, predictions_file='predictions_file.out',
                                     output_file_name='outlier_summary.out'):
     """
     Detect outliers and group results into date ranges with average count and duration in days.
@@ -89,7 +105,7 @@ def check_outliers_with_persistence(new_data, model, persistence_thresh=1400, pr
             sum_predictions = sum(window_predictions)
 
             # Determine the status (Outlier if sum_predictions >= 0, otherwise Inlier)
-            status = "Outlier" if sum_predictions <= 50 else "Inlier"
+            status = "Outlier" if sum_predictions <= 100 else "Inlier"
 
             # Calculate the average count in the window
             avg_count = np.mean([count for _, count in window_data])

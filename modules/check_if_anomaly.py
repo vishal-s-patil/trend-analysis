@@ -8,7 +8,7 @@ with open(file_name, 'r') as file:
 
 X_train = np.array(training_data).reshape(-1, 1)
 
-model = IsolationForest(contamination=0.50, random_state=42)
+model = IsolationForest(contamination=0.15, random_state=42)
 model.fit(X_train)
 
 
