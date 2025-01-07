@@ -11,7 +11,6 @@ def send_email_with_titles_and_images(lst_title_image_pairs, mail_config, items_
     msg['Subject'] = subject
 
     body = "<html><body>"
-    body += f"<h3>{to_datetime}<h3/>"
 
     for heading, title_image_pairs in lst_title_image_pairs:
         body += f"<h2 style='text-align:center;'>{heading}</h2>"
