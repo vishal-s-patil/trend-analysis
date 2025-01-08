@@ -220,9 +220,9 @@ def send_day_wise_graphs(vertica_connection):
                          # (f"Minute-wise sessions count for {to_datetime}", title_image_pairs_sessions_count)
                         ]
 
-    items_per_row = 3
-    mail_title = f"Query count and performance for last {days} from {to_datetime}."
-    send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title, to_datetime)
+    # items_per_row = 3
+    # mail_title = f"Query count and performance for last {days} from {to_datetime}."
+    # send_email_with_titles_and_images(title_image_pairs, mail_config, items_per_row, mail_title, to_datetime)
 
 
 if __name__ == "__main__":

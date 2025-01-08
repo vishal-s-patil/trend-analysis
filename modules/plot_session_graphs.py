@@ -18,6 +18,8 @@ def get_hour_wise_dimensions_session(args):
         df = read(args['vertica_connection'], query, ['hour', 'count'])
         df = fill_min_level_date(from_time, args['to_datetime'], df, 'hour')
 
+        detect_anomalies(df)
+
         user_count_map = {}
         for user in args['users']:
             user_count_map[user] = [0] * 5000
@@ -99,3 +101,41 @@ def plot_sessions_count_graph_hourly(vertica_connection, to_datetime):
     title_image_pairs_sessions_count.append((title, img_session_hourly_count))
 
     return title_image_pairs_sessions_count
+
+
+def detect_anomalies(df, window_size=10, threshold=1.5):
+    ['hour', 'count']
+    """
+    Detect anomalies in a DataFrame where values deviate significantly from the rolling mean.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame with columns ['timestamp', 'value'].
+        window_size (int): The rolling window size in minutes to compute the mean/median.
+        threshold (float): The multiplier for deviation from the rolling mean to consider a spike.
+
+    Returns:
+        List of timestamps where anomalies are detected.
+    """
+    df = df.sort_values(by='hour').reset_index(drop=True)
+
+    df['rolling_mean'] = df['count'].rolling(window=window_size, min_periods=1).mean()
+    df['rolling_std'] = df['count'].rolling(window=window_size, min_periods=1).std()
+
+    df['spike'] = abs(df['count'] - df['rolling_mean']) > threshold * df['rolling_std']
+
+    df['anomaly_group'] = (df['spike'] != df['spike'].shift()).cumsum()
+    anomaly_groups = df[df['spike']].groupby('anomaly_group')
+
+    anomalies = []
+    for _, group in anomaly_groups:
+        if len(group) >= window_size:
+            anomalies.extend(group['hour'].tolist())
+
+    if anomalies:
+        print("Anomalies detected at the following timestamps:")
+        for ts in anomalies:
+            print(ts)
+    else:
+        print("No anomalies detected.")
+
+    return anomalies
